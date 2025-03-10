@@ -7,8 +7,10 @@ class DashboardSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -17,14 +19,10 @@ class DashboardSection extends StatelessWidget {
             style: const TextStyle(fontSize: 20, fontFamily: 'Lexend'),
           ),
           const SizedBox(height: 8),
-          SizedBox(
-            height: 180,
-            child: ListView.separated(
-              scrollDirection: Axis.horizontal,
-              physics: const BouncingScrollPhysics(),
-              itemCount: 5,
-              separatorBuilder: (_, __) => const SizedBox(width: 16),
-              itemBuilder: (_, index) => const DashboardCard(),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: List.generate(2, (_) => 
+              DashboardCard(cardWidth: (screenWidth - 48) / 2),
             ),
           ),
         ],

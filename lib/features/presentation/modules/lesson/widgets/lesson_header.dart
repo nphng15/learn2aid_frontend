@@ -8,7 +8,7 @@ class LessonHeader extends StatelessWidget {
     return const Center(
       child: Text(
         'Lesson',
-        style: TextStyle(fontSize: 49, fontFamily: 'Space Mono'),
+        style: TextStyle(fontSize: 25, fontFamily: 'Space Mono'),
       ),
     );
   }

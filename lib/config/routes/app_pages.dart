@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:learn2aid/features/presentation/modules/loading/loading_binding.dart';
 import 'package:learn2aid/features/presentation/modules/loading/screens/loading_screen.dart';
+import '../../features/presentation/modules/dashboard/dashboard_binding.dart';
 import '../../features/presentation/modules/dashboard/screens/dashboard_page.dart';
 import '../../features/presentation/modules/quiz/screens/quiz_page.dart';
 import '../../features/presentation/modules/lesson/screens/lesson_page.dart';
@@ -17,14 +18,17 @@ abstract class AppPages {
     GetPage(
       name: AppRoutes.dashboard,
       page: () => const DashboardPage(),
+      // binding: DashboardBinding(),
     ),
     GetPage(
       name: AppRoutes.quiz,
       page: () => const QuizPage(),
+      // binding: DashboardBinding(),
     ),
     GetPage(
       name: AppRoutes.lesson,
       page: () => const LessonPage(),
+      // binding: DashboardBinding(),
     ),
   ];
 }

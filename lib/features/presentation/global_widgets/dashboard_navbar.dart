@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../../../config/routes/app_routes.dart';
+import '../../../config/routes/app_routes.dart';
 
 class DashboardNavBar extends StatelessWidget {
   const DashboardNavBar({super.key});
@@ -18,31 +18,27 @@ class DashboardNavBar extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           circleNavButton(
-            onTap: () => Get.toNamed(AppRoutes.dashboard),
+            onTap: () => Get.offNamed(AppRoutes.dashboard),
             isActive: Get.currentRoute == AppRoutes.dashboard,
           ),
           circleNavButton(
-            onTap: () => Get.toNamed(AppRoutes.lesson),
+            onTap: () => Get.offNamed(AppRoutes.lesson),
             isActive: Get.currentRoute == AppRoutes.lesson,
           ),
           circleNavButton(
-            onTap: () => Get.toNamed(AppRoutes.quiz),
+            onTap: () => Get.offNamed(AppRoutes.quiz),
             isActive: Get.currentRoute == AppRoutes.quiz,
           ),
           circleNavButton(
-            onTap: () {
-              // Placeholder cho item thứ 4 (nếu cần tính năng khác)
-            },
+            onTap: () {}, // Placeholder cho chức năng khác
+            isActive: false,
           ),
         ],
       ),
     );
   }
 
-  Widget circleNavButton({
-    VoidCallback? onTap,
-    bool isActive = false,
-  }) {
+  Widget circleNavButton({VoidCallback? onTap, bool isActive = false}) {
     return GestureDetector(
       onTap: onTap,
       child: Container(

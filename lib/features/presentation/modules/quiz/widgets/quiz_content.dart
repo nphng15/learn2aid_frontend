@@ -12,26 +12,32 @@ class QuizContent extends StatelessWidget {
         children: [
           const Text(
             '10/99',
-            style: TextStyle(fontSize: 20, fontFamily: 'Lexend'),
+            style: TextStyle(fontSize: 18, fontFamily: 'Lexend'),
           ),
-          const SizedBox(height: 16),
-          placeholderBox(height: 290),
-          const SizedBox(height: 16),
+          const SizedBox(height: 8),
+          Expanded(
+            flex: 4, 
+            child: placeholderBox(),
+          ),
+          const SizedBox(height: 8),
           const Text(
             'Lorem ipsum dolor sit amet, consectetur adipiscing elit...',
             textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 18, fontFamily: 'Nunito Sans'),
+            style: TextStyle(fontSize: 16, fontFamily: 'Nunito Sans'),
           ),
-          const SizedBox(height: 16),
-          gridAnswers(),
+          const SizedBox(height: 8),
+          Expanded(
+            flex: 3, 
+            child: gridAnswers(),
+          ),
         ],
       ),
     );
   }
 
-  Widget placeholderBox({double height = 200}) {
+  Widget placeholderBox() {
     return Container(
-      height: height,
+      width: double.infinity,
       decoration: BoxDecoration(
         color: const Color.fromRGBO(217, 217, 217, 1),
         borderRadius: BorderRadius.circular(20),
@@ -46,12 +52,12 @@ class QuizContent extends StatelessWidget {
       itemCount: 4,
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
-        mainAxisSpacing: 16,
-        crossAxisSpacing: 16,
+        mainAxisSpacing: 8,
+        crossAxisSpacing: 8,
+        childAspectRatio: 2.5, // Điều chỉnh tỷ lệ để không bị méo
       ),
       itemBuilder: (context, index) {
         return Container(
-          height: 184,
           decoration: BoxDecoration(
             color: const Color.fromRGBO(217, 217, 217, 1),
             borderRadius: BorderRadius.circular(10),

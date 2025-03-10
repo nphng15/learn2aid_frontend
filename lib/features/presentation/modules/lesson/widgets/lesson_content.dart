@@ -1,66 +1,102 @@
 import 'package:flutter/material.dart';
+import 'package:learn2aid/features/presentation/global_widgets/play_button.dart';
 
 class LessonContent extends StatelessWidget {
   const LessonContent({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            'Section name',
-            style: TextStyle(fontSize: 20, fontFamily: 'Lexend'),
-          ),
-          const Text(
-            'Lesson name',
-            style: TextStyle(fontSize: 40, fontFamily: 'Lexend'),
-          ),
-          const SizedBox(height: 16),
-          placeholderBox(height: 480),
-          const SizedBox(height: 16),
-          descriptionSection(),
-          playButton(),
-        ],
-      ),
-    );
-  }
-
-  Widget placeholderBox({double height = 200}) {
-    return Container(
-      height: height,
-      decoration: BoxDecoration(
-        color: const Color.fromRGBO(217, 217, 217, 1),
-        borderRadius: BorderRadius.circular(20),
-      ),
-    );
-  }
-
-  Widget descriptionSection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text('Description', style: TextStyle(fontSize: 26, fontFamily: 'Lexend')),
-        const SizedBox(height: 8),
-        const Text(
-          'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla facilisi.',
-          style: TextStyle(fontSize: 13, fontFamily: 'Nunito Sans'),
-        ),
-      ],
-    );
-  }
-
-  Widget playButton() {
-    return Center(
+    return Align(
+      alignment: Alignment.center, 
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 32),
+        width: MediaQuery.of(context).size.width * 0.8,
+        height: MediaQuery.of(context).size.height * 0.55, 
+        padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: const Color.fromRGBO(237, 237, 237, 1),
-          borderRadius: BorderRadius.circular(60),
+          color: const Color(0xFFF5F5F5), 
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.2),
+              blurRadius: 10,
+              spreadRadius: 2,
+              offset: const Offset(0, 5),
+            ),
+          ],
         ),
-        child: const Text('Play', style: TextStyle(fontSize: 16, fontFamily: 'Lexend')),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Stack(
+              children: [
+                Container(
+                  width: double.infinity,
+                  height: 160,
+                  decoration: BoxDecoration(
+                    color: const Color.fromRGBO(217, 217, 217, 1),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                Positioned(
+                  bottom: 5,
+                  right: 5,
+                  child: progressIndicator(),
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            const Text(
+              'Description',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                fontFamily: 'Lexend',
+              ),
+            ),
+            const SizedBox(height: 4),
+            Expanded(
+              child: SingleChildScrollView(
+                child: const Text(
+                  'Lorem ipsum dolor sit amet, consectetur adipiscing elit. '
+                  'Nullam tristique eros nec diam consectetur gravida. Nulla facilisi. '
+                  'Vestibulum malesuada nisl tortor, tincidunt pulvinar massa lacinia ut.',
+                  style: TextStyle(fontSize: 14, fontFamily: 'Nunito Sans'),
+                ),
+              ),
+            ),
+            Center(child: PlayButton()),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget progressIndicator() {
+    return Container(
+      width: 40,
+      height: 40,
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        shape: BoxShape.circle,
+      ),
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          SizedBox(
+            width: 30,
+            height: 30,
+            child: CircularProgressIndicator(
+              value: 0.6,
+              strokeWidth: 4,
+              backgroundColor: Colors.grey[300],
+              valueColor: const AlwaysStoppedAnimation<Color>(Colors.redAccent),
+            ),
+          ),
+          const Text(
+            '%',
+            style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+          ),
+        ],
       ),
     );
   }
