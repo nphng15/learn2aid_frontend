@@ -8,6 +8,7 @@ class DashboardSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
+    final cardWidth = screenWidth * 0.45; 
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -19,10 +20,16 @@ class DashboardSection extends StatelessWidget {
             style: const TextStyle(fontSize: 20, fontFamily: 'Lexend'),
           ),
           const SizedBox(height: 8),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: List.generate(2, (_) => 
-              DashboardCard(cardWidth: (screenWidth - 48) / 2),
+          SizedBox(
+            height: cardWidth * 1.2, // Chiều cao của ListView
+            child: ListView.separated(
+              scrollDirection: Axis.horizontal,
+              physics: const BouncingScrollPhysics(),
+              itemCount: 5,
+              separatorBuilder: (context, index) => const SizedBox(width: 16),
+              itemBuilder: (context, index) {
+                return DashboardCard(cardWidth: cardWidth);
+              },
             ),
           ),
         ],

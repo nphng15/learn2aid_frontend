@@ -44,6 +44,10 @@ dependencies:
     #device preview
   device_preview: ^1.2.0
 
+  #upload và quay video
+  image_picker: ^1.0.7
+  camera: ^0.10.5+2
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
