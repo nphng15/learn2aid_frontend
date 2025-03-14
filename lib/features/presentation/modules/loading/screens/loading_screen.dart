@@ -1,40 +1,82 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../loading_controller.dart';
-import '../widgets/loading_logo.dart';
 
-class LoadingScreen extends StatelessWidget {
-  const LoadingScreen({super.key});
+class LoadingScreen extends GetView<LoadingController> {
+  const LoadingScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.find<LoadingController>();
-
     return Scaffold(
-      appBar: AppBar(
-        actions: [
-          Obx(() => Switch(
-                value: controller.isDark.value,
-                onChanged: controller.toggleTheme,
-              )),
-          Obx(() => DropdownButton<double>(
-                value: controller.widthFactor.value,
-                onChanged: controller.changeWidthFactor,
-                items: const [
-                  DropdownMenuItem(value: 0.5, child: Text('Size: 50%')),
-                  DropdownMenuItem(value: 0.75, child: Text('Size: 75%')),
-                  DropdownMenuItem(value: 1.0, child: Text('Size: 100%')),
-                ],
-              )),
-        ],
+      backgroundColor: Colors.white, // Nền trắng
+      body: SafeArea(
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              // Phần dấu cộng
+              // Thay Icon(...) bằng Image.asset(...) khi có file ảnh
+              Container(
+                width: 150,
+                height: 150,
+                child: Image.asset('lib/assets/learn2aid.png')
+              ),
+              const SizedBox(height: 20),
+
+              // 4 dots
+              Obx(() {
+                return Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: List.generate(4, (index) {
+                    bool isActive = (controller.currentDot.value == index);
+                    return AnimatedContainer(
+                      duration: const Duration(milliseconds: 300),
+                      margin: const EdgeInsets.symmetric(horizontal: 4),
+                      width: 12,
+                      height: 12,
+                      decoration: BoxDecoration(
+                        color: isActive ? const Color(0xFF55C595) : Colors.black26,
+                        shape: BoxShape.circle,
+                      ),
+                    );
+                  }),
+                );
+              }),
+              const SizedBox(height: 20),
+              const Text.rich(
+                TextSpan(
+                  children: [
+                    TextSpan(
+                      text: 'Learn',
+                      style: TextStyle(
+                        color: Color(0xFF215273),
+                        fontSize: 48,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    TextSpan(
+                      text: '2',
+                      style: TextStyle(
+                        color: Color(0xFF55C595), 
+                        fontSize: 48,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    TextSpan(
+                      text: 'Aid',
+                      style: TextStyle(
+                        color: Color(0xFF215273),
+                        fontSize: 48,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
-      body: Center(
-        child: Obx(() => Container(
-              width: MediaQuery.of(context).size.width * controller.widthFactor.value,
-              child: const LoadingLogo(),
-            )),
-      ),
-      backgroundColor: controller.isDark.value ? Colors.black : Colors.white,
     );
   }
 }
