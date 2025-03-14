@@ -18,10 +18,10 @@ class LessonPage extends StatelessWidget {
           children: [
             Row(
               children: [
-                IconButton(
-                  icon: const Icon(Icons.arrow_back),
-                  onPressed: () => Get.back(),
-                ),
+                // IconButton(
+                //   icon: const Icon(Icons.arrow_back),
+                //   onPressed: () => Get.back(),
+                // ),
                 const Expanded(child: LessonHeader()),
               ],
             ),

@@ -6,8 +6,13 @@ import 'package:get/get.dart';
 import 'package:learn2aid/config/routes/app_pages.dart';
 import 'package:learn2aid/config/routes/app_routes.dart';
 import 'package:learn2aid/features/presentation/global_widgets/scroll_behavior.dart';
+import 'package:learn2aid/features/presentation/modules/auth/login/login_controller.dart';
 
 void main() {
+    Get.put<LoginController>(LoginController());
+// nhớ xóa
+
+
   runApp(
     DevicePreview(
       enabled: !kReleaseMode,

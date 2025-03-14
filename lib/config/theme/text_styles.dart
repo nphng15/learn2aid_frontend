@@ -1,5 +1,72 @@
-// import 'package:flutter/cupertino.dart';
-// import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:google_fonts/google_fonts.dart';
+
+import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'app_color.dart';
+
+class AppTextStyles {
+  // Title Text
+  static TextStyle title40 = GoogleFonts.lexend(
+    fontSize: 40,
+    fontWeight: FontWeight.bold,
+    color: AppColors.secondary, // Màu xanh lá
+  );
+
+  // Button Text
+  static TextStyle button24 = GoogleFonts.lexend(
+    fontSize: 24,
+    fontWeight: FontWeight.w500,
+    color: AppColors.white, // Trắng
+  );
+
+  // Input Placeholder Text
+  static TextStyle inputText16 = GoogleFonts.lexend(
+    fontSize: 16,
+    fontWeight: FontWeight.w400,
+    color: AppColors.grey3, // Xám đậm
+  );
+
+  // Small Text (Forgot Password, Or Login With)
+  static TextStyle smallText14 = GoogleFonts.lexend(
+    fontSize: 14,
+    fontWeight: FontWeight.w400,
+    color: AppColors.grey3, // Xám đậm
+  );
+
+  // Register Link
+  static TextStyle link14 = GoogleFonts.lexend(
+    fontSize: 14,
+    fontWeight: FontWeight.w500,
+    color: AppColors.secondary, // Xanh lá
+  );
+
+  // Error Message Text
+  static TextStyle error15 = GoogleFonts.nunitoSans(
+    fontSize: 15,
+    fontWeight: FontWeight.w400,
+    color: AppColors.error, // Đỏ cảnh báo
+  );
+
+  static TextStyle bold36 = GoogleFonts.lexend(
+    fontSize: 36,
+    fontWeight: FontWeight.bold,
+    color: AppColors.secondary,
+  );
+
+  static TextStyle regular14 = GoogleFonts.lexend(
+    fontSize: 14,
+    fontWeight: FontWeight.w400,
+    color: AppColors.grey3,
+  );
+
+  static TextStyle medium15 = GoogleFonts.lexend(
+    fontSize: 15,
+    fontWeight: FontWeight.w500,
+    color: AppColors.primary,
+  );
+}
+
 
 // class AppTextStyles {
 //   static TextStyle bold36 = GoogleFonts.lexend(
