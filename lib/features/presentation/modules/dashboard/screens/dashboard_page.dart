@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import '../../../global_widgets/dashboard_navbar.dart';
 import '../widgets/dashboard_header.dart';
 import '../widgets/dashboard_section.dart';

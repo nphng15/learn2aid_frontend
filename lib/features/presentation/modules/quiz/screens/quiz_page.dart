@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import '../../../global_widgets/dashboard_navbar.dart';
 import '../widgets/quiz_header.dart';
 import '../widgets/quiz_content.dart';
@@ -21,7 +20,7 @@ class QuizPage extends StatelessWidget {
                 //   onPressed: () => Get.back(),
                 // ),
                 const Expanded(child: SingleChildScrollView(
-                  physics: const BouncingScrollPhysics(),
+                  physics: BouncingScrollPhysics(),
                   child: Column(
                     children: [
                       QuizHeader(),

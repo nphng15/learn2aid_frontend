@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:learn2aid/features/presentation/global_widgets/play_button.dart';
 import '../../../global_widgets/dashboard_navbar.dart';
 import '../widgets/lesson_header.dart';
 import '../widgets/lesson_content.dart';
