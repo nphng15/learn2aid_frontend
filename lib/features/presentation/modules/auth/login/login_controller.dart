@@ -19,8 +19,6 @@ class LoginController extends GetxController {
     final email = emailController.text.trim();
     final password = passwordController.text.trim();
 
-    // (Optional) Validate email & password here
-
     await Future.delayed(const Duration(seconds: 1)); // Fake delay
 
     // For now, let's just do a mock check
@@ -29,7 +27,6 @@ class LoginController extends GetxController {
       // Remove keyboard focus
       Get.focusScope?.unfocus();
 
-      // Replace with your real route
       Get.offNamed('/dashboard');
     } else {
       // Error => Show message

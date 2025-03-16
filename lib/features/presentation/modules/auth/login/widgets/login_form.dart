@@ -123,7 +123,7 @@ class LoginForm extends StatelessWidget {
 
           SizedBox(height: 0.02 * screenHeight),
 
-          // Show error message if any
+          // Show error message
           Obx(() {
             if (loginCtrl.errorMessage.value.isNotEmpty) {
               return Text(
