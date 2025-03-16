@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:get/get.dart';
-import '../../../../config/routes/app_routes.dart';
+import '../../../../../config/routes/app_routes.dart';
 
 class LoadingController extends GetxController {
   // Biến RxInt lưu vị trí chấm đang “active”.

@@ -37,7 +37,7 @@ class MyApp extends StatelessWidget {
       ),
       scrollBehavior: MyCustomScrollBehavior(),
       debugShowCheckedModeBanner: false,
-      initialRoute: AppRoutes.dashboard,
+      initialRoute: AppRoutes.loading,
       getPages: AppPages.pages,
     );
     
