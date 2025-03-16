@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../../../../../../config/theme/app_color.dart';
 import '../login_controller.dart';
 
@@ -8,7 +8,7 @@ class LoginForm extends StatelessWidget {
   final double screenWidth;
   final double screenHeight;
 
-  // Use Get.find to get our controller
+  // Sử dụng Get.find để lấy LoginController
   final loginCtrl = Get.find<LoginController>();
 
   LoginForm({
@@ -89,7 +89,7 @@ class LoginForm extends StatelessWidget {
 
           SizedBox(height: 0.05 * screenHeight),
 
-          // Login button with isLoading check
+          // Login button
           Center(
             child: Obx(() {
               if (loginCtrl.isLoading.value) {
@@ -97,7 +97,6 @@ class LoginForm extends StatelessWidget {
               }
               return GestureDetector(
                 onTap: () {
-                  // We'll do actual API later
                   loginCtrl.loginUser();
                 },
                 child: Container(
@@ -123,7 +122,7 @@ class LoginForm extends StatelessWidget {
 
           SizedBox(height: 0.02 * screenHeight),
 
-          // Show error message
+          // Hiển thị lỗi nếu có
           Obx(() {
             if (loginCtrl.errorMessage.value.isNotEmpty) {
               return Text(
