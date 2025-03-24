@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import '../../../../../../config/theme/app_color.dart';
+import '../../profile/screens/profile_screen.dart';
+import '../../auth/login/login_controller.dart';
 
 class DashboardHeader extends StatelessWidget {
   const DashboardHeader({super.key});
@@ -30,9 +34,11 @@ class DashboardHeader extends StatelessWidget {
     );
   }
 
-      @override
-      Widget build(BuildContext context) {
-        return Padding(
+  @override
+  Widget build(BuildContext context) {
+    final LoginController loginController = Get.find<LoginController>();
+    
+    return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -41,9 +47,20 @@ class DashboardHeader extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Icon(Icons.menu, size: 24),
-              CircleAvatar(
-                backgroundColor: const Color.fromRGBO(217, 217, 217, 1),
-                radius: 20,
+              GestureDetector(
+                onTap: () {
+                  Get.to(() => const ProfileScreen());
+                },
+                child: Obx(() => CircleAvatar(
+                  radius: 20,
+                  backgroundImage: loginController.googleUserPhotoUrl.value.isNotEmpty
+                      ? NetworkImage(loginController.googleUserPhotoUrl.value)
+                      : null,
+                  backgroundColor: const Color.fromRGBO(217, 217, 217, 1),
+                  child: loginController.googleUserPhotoUrl.value.isEmpty
+                      ? const Icon(Icons.person, color: AppColors.secondary)
+                      : null,
+                )),
               ),
             ],
           ),
