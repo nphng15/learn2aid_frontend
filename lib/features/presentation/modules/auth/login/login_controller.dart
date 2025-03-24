@@ -15,8 +15,14 @@ class LoginController extends GetxController {
   var isLoading = false.obs;
   var errorMessage = ''.obs;
   var authToken = ''.obs;
+  
+  // Thông tin người dùng Google
+  var googleUserEmail = ''.obs;
+  var googleUserName = ''.obs;
+  var googleUserPhotoUrl = ''.obs;
+  var googleAccessToken = ''.obs;
 
-  // Đăng nhập với email & password (nếu có)
+  // Đăng nhập với email & password 
   Future<void> loginUser() async {
     isLoading.value = true;
     errorMessage.value = '';
@@ -30,7 +36,6 @@ class LoginController extends GetxController {
         password: password,
       );
       authToken.value = (await userCredential.user!.getIdToken())!;
-      // authToken.value = await userCredential.user!.getIdToken();
       Get.offAllNamed(AppRoutes.dashboard);
     } catch (e) {
       errorMessage.value = 'Login failed: $e';
@@ -51,8 +56,16 @@ class LoginController extends GetxController {
         return; // Người dùng hủy đăng nhập
       }
 
+      // Lấy thông tin người dùng từ Google
+      googleUserEmail.value = googleUser.email;
+      googleUserName.value = googleUser.displayName ?? '';
+      googleUserPhotoUrl.value = googleUser.photoUrl ?? '';
+      
       final GoogleSignInAuthentication googleAuth =
           await googleUser.authentication;
+      
+      // Lưu access token
+      googleAccessToken.value = googleAuth.accessToken ?? '';
 
       final AuthCredential credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
@@ -63,7 +76,13 @@ class LoginController extends GetxController {
           await _auth.signInWithCredential(credential);
 
       authToken.value = (await userCredential.user!.getIdToken())!;
-      // authToken.value = await userCredential.user!.getIdToken();
+      
+   
+      // print('Google User Email: ${googleUserEmail.value}');
+      // print('Google User Name: ${googleUserName.value}');
+      // print('Google User Photo URL: ${googleUserPhotoUrl.value}');
+      // print('Google Access Token: ${googleAccessToken.value}');
+      
       Get.offAllNamed(AppRoutes.dashboard);
     } catch (e) {
       errorMessage.value = 'Google login failed: $e';
@@ -77,6 +96,11 @@ class LoginController extends GetxController {
     await _auth.signOut();
     await GoogleSignIn().signOut();
     authToken.value = '';
+    // Xóa thông tin Google
+    googleUserEmail.value = '';
+    googleUserName.value = '';
+    googleUserPhotoUrl.value = '';
+    googleAccessToken.value = '';
     Get.offAllNamed(AppRoutes.login);
   }
 }

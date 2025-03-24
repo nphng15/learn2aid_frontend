@@ -1,9 +1,10 @@
-// import 'package:get/get.dart';
-// import 'dashboard_controller.dart';
+import 'package:get/get.dart';
+import '../profile/profile_controller.dart';
 
-// class DashboardBinding extends Bindings {
-//   @override
-//   void dependencies() {
-//     Get.put(DashboardController());
-//   }
-// }
+class DashboardBinding extends Bindings {
+  @override
+  void dependencies() {
+    // Inject ProfileController trực tiếp
+    Get.put<ProfileController>(ProfileController());
+  }
+}
