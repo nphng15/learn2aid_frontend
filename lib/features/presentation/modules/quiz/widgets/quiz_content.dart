@@ -1,69 +1,121 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
+import '../../../../../config/theme/app_color.dart';
+import '../quiz_controller.dart';
+import 'quiz_list.dart';
+import 'quiz_question.dart';
+import 'quiz_results.dart';
 
 class QuizContent extends StatelessWidget {
-  const QuizContent({super.key});
+  const QuizContent({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final QuizController quizController = Get.find<QuizController>();
+
     return Padding(
       padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            '10/99',
-            style: TextStyle(fontSize: 18, fontFamily: 'Lexend'),
-          ),
-          const SizedBox(height: 8),
-          Expanded(
-            flex: 4, 
-            child: placeholderBox(),
-          ),
-          const SizedBox(height: 8),
-          const Text(
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit...',
-            textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 16, fontFamily: 'Nunito Sans'),
-          ),
-          const SizedBox(height: 8),
-          Expanded(
-            flex: 3, 
-            child: gridAnswers(),
-          ),
-        ],
-      ),
-    );
-  }
+      child: GetBuilder<QuizController>(
+        builder: (_) {
+          // Hiển thị trạng thái loading
+          if (quizController.isLoading.value) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CircularProgressIndicator(
+                    color: AppColors.secondary,
+                    strokeWidth: 3,
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    'Đang tải bài kiểm tra...',
+                    style: GoogleFonts.lexend(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      color: AppColors.secondary,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  // Hiển thị thông báo để người dùng biết quá trình đang diễn ra
+                  Text(
+                    'Vui lòng đợi trong giây lát',
+                    style: GoogleFonts.lexend(
+                      fontSize: 14,
+                      color: AppColors.grey3,
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }
 
-  Widget placeholderBox() {
-    return Container(
-      width: double.infinity,
-      decoration: BoxDecoration(
-        color: const Color.fromRGBO(217, 217, 217, 1),
-        borderRadius: BorderRadius.circular(20),
-      ),
-    );
-  }
+          // Hiển thị lỗi nếu có
+          if (quizController.errorMessage.value.isNotEmpty) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.error_outline,
+                    size: 48,
+                    color: AppColors.error,
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    'Đã xảy ra lỗi',
+                    style: GoogleFonts.lexend(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w500,
+                      color: AppColors.error,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    quizController.errorMessage.value,
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.lexend(
+                      fontSize: 14,
+                      color: AppColors.grey3,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  ElevatedButton(
+                    onPressed: () {
+                      quizController.errorMessage.value = '';
+                      quizController.loadQuizzes();
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.secondary,
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    child: Text(
+                      'Thử lại',
+                      style: GoogleFonts.lexend(),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }
 
-  Widget gridAnswers() {
-    return GridView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      itemCount: 4,
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        mainAxisSpacing: 8,
-        crossAxisSpacing: 8,
-        childAspectRatio: 2.5, // Điều chỉnh tỷ lệ để không bị méo
+          // Hiển thị các màn hình khác nhau dựa trên trạng thái quiz
+          if (quizController.currentQuiz.value == null) {
+            // Hiển thị danh sách quiz (đã được tối ưu trong widget QuizList)
+            return const QuizList();
+          } else if (quizController.showResults.value) {
+            // Hiển thị kết quả quiz
+            return const QuizResults();
+          } else {
+            // Hiển thị câu hỏi quiz
+            return const QuizQuestion();
+          }
+        },
       ),
-      itemBuilder: (context, index) {
-        return Container(
-          decoration: BoxDecoration(
-            color: const Color.fromRGBO(217, 217, 217, 1),
-            borderRadius: BorderRadius.circular(10),
-          ),
-        );
-      },
     );
   }
 }
