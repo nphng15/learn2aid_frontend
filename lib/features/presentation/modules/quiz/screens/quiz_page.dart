@@ -1,39 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import '../../../global_widgets/dashboard_navbar.dart';
 import '../widgets/quiz_header.dart';
 import '../widgets/quiz_content.dart';
+import '../quiz_controller.dart';
 
 class QuizPage extends StatelessWidget {
-  const QuizPage({super.key});
+  const QuizPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    // Đảm bảo QuizController đã được inject
+    Get.find<QuizController>();
+    
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+      backgroundColor: Colors.white,
       body: SafeArea(
         child: Column(
           children: [
-            Row(
-              children: [
-                // IconButton(
-                //   icon: const Icon(Icons.arrow_back),
-                //   onPressed: () => Get.back(),
-                // ),
-                const Expanded(child: SingleChildScrollView(
-                  physics: const BouncingScrollPhysics(),
-                  child: Column(
-                    children: [
-                      QuizHeader(),
-                    ],
-                  )
-                ),
-                )
-              ],
-            ),
-
-            const SizedBox(height: 8),
-            const Expanded(child: QuizContent()), // Sử dụng Expanded để tự scale
-            const DashboardNavBar(), // Giữ Navbar cố định
+            // Quiz Header - hiển thị tiêu đề, thời gian, thông tin quiz
+            const QuizHeader(),
+            
+            // Quiz Content - hiển thị danh sách quiz, câu hỏi, kết quả
+            const Expanded(child: QuizContent()),
+            
+            // Dashboard NavBar - điều hướng giữa các trang
+            const DashboardNavBar(),
           ],
         ),
       ),
