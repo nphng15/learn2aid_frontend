@@ -19,10 +19,11 @@ void main() async {
   Get.put<AuthController>(AuthController(), permanent: true); // Sử dụng AuthController
 
   runApp(
-    DevicePreview(
-      enabled: !kReleaseMode,
-      builder: (context) => const MyApp(),
-    ),
+    MyApp()  
+    // DevicePreview(
+    //   enabled: !kReleaseMode,
+    //   builder: (context) => const MyApp(),
+    // ),
   );
 }
 
