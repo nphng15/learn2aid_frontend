@@ -8,7 +8,9 @@ import 'package:learn2aid/features/presentation/modules/auth/loading/screens/loa
 import '../../features/presentation/modules/dashboard/screens/dashboard_page.dart';
 import '../../features/presentation/modules/dashboard/dashboard_binding.dart';
 import '../../features/presentation/modules/quiz/screens/quiz_page.dart';
+import '../../features/presentation/modules/quiz/quiz_binding.dart';
 import '../../features/presentation/modules/lesson/screens/lesson_page.dart';
+import '../../features/presentation/modules/lesson/bindings/lesson_binding.dart';
 import '../../features/presentation/modules/profile/screens/profile_screen.dart';
 import '../../features/presentation/modules/profile/profile_binding.dart';
 import 'app_routes.dart';
@@ -24,11 +26,11 @@ abstract class AppPages {
       name: AppRoutes.login,
       page: () => const LoginScreen(),
       binding: LoginBinding(),
-    ),
+      ),
     GetPage(
       name: AppRoutes.register, 
       page: () => const RegisterScreen()
-    ),
+      ),
     GetPage(
       name: AppRoutes.dashboard,
       page: () => const DashboardPage(),
@@ -37,10 +39,12 @@ abstract class AppPages {
     GetPage(
       name: AppRoutes.quiz,
       page: () => const QuizPage(),
+      binding: QuizBinding(),
     ),
     GetPage(
       name: AppRoutes.lesson,
       page: () => const LessonPage(),
+      binding: LessonBinding(),
     ),
     GetPage(
       name: AppRoutes.profile,

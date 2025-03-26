@@ -1,5 +1,3 @@
-import 'package:device_preview/device_preview.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -7,14 +5,13 @@ import 'package:learn2aid/config/routes/app_pages.dart';
 import 'package:learn2aid/config/routes/app_routes.dart';
 import 'package:learn2aid/features/presentation/modules/auth/auth_controller.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  try {
-    await Firebase.initializeApp();
-  } catch (e) {
-    print("Firebase init error: $e");
-  }
+  await Firebase.initializeApp();
+  // Khởi tạo Firestore
+  FirebaseFirestore.instance;
 
   Get.put<AuthController>(AuthController(), permanent: true); // Sử dụng AuthController
 

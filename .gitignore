@@ -11,7 +11,11 @@
 .svn/
 .swiftpm/
 migrate_working_dir/
-
+frontend/
+documents/
+ai_service/
+backend/
+video_analysis_documentation.md 
 # IntelliJ related
 *.iml
 *.ipr
