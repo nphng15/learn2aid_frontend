@@ -10,6 +10,7 @@ import '../../features/presentation/modules/dashboard/dashboard_binding.dart';
 import '../../features/presentation/modules/quiz/screens/quiz_page.dart';
 import '../../features/presentation/modules/quiz/quiz_binding.dart';
 import '../../features/presentation/modules/lesson/screens/lesson_page.dart';
+import '../../features/presentation/modules/lesson/bindings/lesson_binding.dart';
 import '../../features/presentation/modules/profile/screens/profile_screen.dart';
 import '../../features/presentation/modules/profile/profile_binding.dart';
 import 'app_routes.dart';
@@ -43,6 +44,7 @@ abstract class AppPages {
     GetPage(
       name: AppRoutes.lesson,
       page: () => const LessonPage(),
+      binding: LessonBinding(),
     ),
     GetPage(
       name: AppRoutes.profile,

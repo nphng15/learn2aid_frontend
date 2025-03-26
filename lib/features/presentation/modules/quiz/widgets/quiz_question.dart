@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../../../config/theme/app_color.dart';
 import '../quiz_controller.dart';
-import '../../../../domain/entities/question_entity.dart';
 
 class QuizQuestion extends StatelessWidget {
   const QuizQuestion({Key? key}) : super(key: key);

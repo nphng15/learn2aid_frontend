@@ -4,6 +4,7 @@ import '../../domain/entities/question_entity.dart';
 import '../../domain/repositories/quiz_repository.dart';
 import '../models/quiz_model.dart';
 import '../models/question_model.dart';
+import '../../../core/error/exceptions.dart';
 
 class QuizRepositoryImpl implements QuizRepository {
   final FirebaseFirestore firestore;
@@ -20,7 +21,7 @@ class QuizRepositoryImpl implements QuizRepository {
           .map((doc) => QuizModel.fromFirestore(doc))
           .toList();
     } catch (e) {
-      throw Exception('Lỗi khi tải danh sách quiz: $e');
+      throw QuizException('Lỗi khi tải danh sách quiz: $e');
     }
   }
 
@@ -30,12 +31,15 @@ class QuizRepositoryImpl implements QuizRepository {
       final DocumentSnapshot quizDoc = await firestore.collection('quizzes').doc(id).get();
       
       if (!quizDoc.exists) {
-        return null;
+        throw NotFoundException('Không tìm thấy quiz với ID: $id');
       }
       
       return QuizModel.fromFirestore(quizDoc);
     } catch (e) {
-      throw Exception('Lỗi khi tải quiz: $e');
+      if (e is NotFoundException) {
+        return null;
+      }
+      throw QuizException('Lỗi khi tải quiz: $e');
     }
   }
 
@@ -47,12 +51,19 @@ class QuizRepositoryImpl implements QuizRepository {
           .doc(quizId)
           .collection('questions')
           .get();
+      
+      if (questionSnapshot.docs.isEmpty) {
+        throw NotFoundException('Không tìm thấy câu hỏi cho quiz: $quizId');
+      }
 
       return questionSnapshot.docs
           .map((doc) => QuestionModel.fromFirestore(doc))
           .toList();
     } catch (e) {
-      throw Exception('Lỗi khi tải câu hỏi: $e');
+      if (e is NotFoundException) {
+        throw e;
+      }
+      throw QuizException('Lỗi khi tải câu hỏi: $e');
     }
   }
 
@@ -68,6 +79,10 @@ class QuizRepositoryImpl implements QuizRepository {
     required int timeSpent,
   }) async {
     try {
+      if (userId.isEmpty || quizId.isEmpty) {
+        throw InvalidDataException('Thiếu thông tin người dùng hoặc quiz');
+      }
+      
       await firestore.collection('quiz_results').add({
         'userId': userId,
         'userName': userName,
@@ -81,7 +96,10 @@ class QuizRepositoryImpl implements QuizRepository {
         'timestamp': FieldValue.serverTimestamp(),
       });
     } catch (e) {
-      throw Exception('Lỗi khi nộp kết quả: $e');
+      if (e is InvalidDataException) {
+        throw e;
+      }
+      throw QuizException('Lỗi khi nộp kết quả: $e');
     }
   }
 } 

@@ -27,8 +27,8 @@ class LessonPage extends StatelessWidget {
             Expanded(
               child: PageView(
                 controller: PageController(viewportFraction: 0.85),
-                children: const [
-                  Column(
+                children: [
+                  const Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       LessonContent(),

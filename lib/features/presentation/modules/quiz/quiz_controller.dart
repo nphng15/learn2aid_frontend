@@ -4,7 +4,6 @@ import '../../../domain/entities/question_entity.dart';
 import '../../../domain/usecases/get_quizzes_usecase.dart';
 import '../../../domain/usecases/get_quiz_questions_usecase.dart';
 import '../../../domain/usecases/submit_quiz_result_usecase.dart';
-import '../../../data/repositories/quiz_repository_impl.dart';
 import '../auth/login/login_controller.dart';
 import 'package:flutter/material.dart';
 
