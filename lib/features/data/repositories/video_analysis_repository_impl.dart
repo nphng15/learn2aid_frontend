@@ -50,13 +50,31 @@ class VideoAnalysisRepositoryImpl implements VideoAnalysisRepository {
         if (response.statusCode == 200) {
           final jsonData = json.decode(response.body);
           
-          // Chuyển đổi response từ backend thành đối tượng VideoAnalysis
+          double scoreValue = 0.0;
+          if (jsonData['point'] != null) {
+            try {
+              // Nếu point là String, cố gắng chuyển đổi sang double
+              if (jsonData['point'] is String) {
+                scoreValue = double.tryParse(jsonData['point']) ?? 0.0;
+              } else {
+                scoreValue = (jsonData['point'] as num).toDouble();
+              }
+            } catch (e) {
+              print('Lỗi khi chuyển đổi point thành số: $e');
+              scoreValue = 0.0;
+            }
+          }
+          
           return VideoAnalysisModel(
             id: DateTime.now().millisecondsSinceEpoch.toString(),
             analysis: jsonData['comment'] ?? 'Phân tích video hoàn tất',
-            score: jsonData['point'] ?? 0,
-            comments: jsonData['comment'] != null ? [jsonData['comment']] : [],
-            suggestions: jsonData['tips'] != null ? List<String>.from(jsonData['tips']) : [],
+            score: scoreValue,
+            comments: [jsonData['comment'] ?? 'Không có nhận xét chi tiết'],
+            suggestions: [
+              'Hãy tập trung vào kỹ thuật đúng.',
+              'Giữ nhịp đều đặn khi thực hiện động tác.',
+              'Đảm bảo tư thế chuẩn trong suốt quá trình thực hiện.'
+            ],
             createdAt: DateTime.now(),
           );
         } else {
@@ -92,7 +110,9 @@ class VideoAnalysisRepositoryImpl implements VideoAnalysisRepository {
       score: 75.0,
       comments: [errorMessage, 'Đang sử dụng phân tích offline'],
       suggestions: [
-        'Hãy thử lại sau'
+        'Kiểm tra kết nối mạng của bạn',
+        'Đảm bảo video có độ dài phù hợp (5-30 giây)',
+        'Thử lại sau vài phút'
       ],
       createdAt: DateTime.now(),
     );

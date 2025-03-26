@@ -52,7 +52,7 @@ class AnalysisResultDialog extends StatelessWidget {
                 const Icon(Icons.star, color: Colors.amber, size: 28),
                 const SizedBox(width: 8),
                 Text(
-                  'Điểm số: ${analysis.score.toStringAsFixed(1)}/10',
+                  'Điểm số: ${analysis.score.toStringAsFixed(1)}/100',
                   style: const TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
@@ -60,7 +60,48 @@ class AnalysisResultDialog extends StatelessWidget {
                 ),
               ],
             ),
+            const SizedBox(height: 8),
+            
+            // Thêm thanh tiến trình điểm số
+            ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: LinearProgressIndicator(
+                value: analysis.score / 100,
+                minHeight: 8,
+                backgroundColor: Colors.grey.shade200,
+                valueColor: AlwaysStoppedAnimation<Color>(
+                  analysis.score >= 80 ? Colors.green :
+                  analysis.score >= 60 ? Colors.blue :
+                  analysis.score >= 40 ? Colors.orange : 
+                  Colors.red,
+                ),
+              ),
+            ),
             const SizedBox(height: 16),
+            
+            // Hiển thị thông báo offline nếu cần
+            if (analysis.comments.any((c) => c.contains('offline')))
+              Container(
+                padding: const EdgeInsets.all(10),
+                margin: const EdgeInsets.only(bottom: 16),
+                decoration: BoxDecoration(
+                  color: Colors.amber.shade100,
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: Colors.amber.shade700),
+                ),
+                child: Row(
+                  children: [
+                    Icon(Icons.warning_amber_rounded, color: Colors.amber.shade800),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        'Đang sử dụng phân tích offline do không thể kết nối tới AI.',
+                        style: TextStyle(color: Colors.amber.shade900),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             
             // Hiển thị nhận xét
             Text(
@@ -70,38 +111,84 @@ class AnalysisResultDialog extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 8),
-            ...analysis.comments.map((comment) => Padding(
-              padding: const EdgeInsets.only(bottom: 8),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text('• ', style: TextStyle(fontWeight: FontWeight.bold)),
-                  Expanded(child: Text(comment)),
-                ],
+            Container(
+              constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.2),
+              decoration: BoxDecoration(
+                color: Colors.grey.shade50,
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: Colors.grey.shade300),
               ),
-            )),
-            const SizedBox(height: 16),
-            
-            // Hiển thị đề xuất
-            Text(
-              'Đề xuất cải thiện:',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.bold,
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: analysis.comments.map((comment) => Padding(
+                      padding: const EdgeInsets.only(bottom: 8),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text('• ', style: TextStyle(fontWeight: FontWeight.bold)),
+                          Expanded(
+                            child: Text(
+                              comment,
+                              style: const TextStyle(fontSize: 14),
+                              overflow: TextOverflow.visible,
+                            ),
+                          ),
+                        ],
+                      ),
+                    )).toList(),
+                  ),
+                ),
               ),
             ),
-            const SizedBox(height: 8),
-            ...analysis.suggestions.map((suggestion) => Padding(
-              padding: const EdgeInsets.only(bottom: 8),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Icon(Icons.tips_and_updates, size: 16, color: Colors.blue),
-                  const SizedBox(width: 8),
-                  Expanded(child: Text(suggestion)),
-                ],
+            const SizedBox(height: 16),
+            
+            // Hiển thị đề xuất cải thiện - Chỉ hiển thị nếu có dữ liệu
+            if (analysis.suggestions.isNotEmpty) ...[
+              Text(
+                'Đề xuất cải thiện:',
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            )),
-            const SizedBox(height: 20),
+              const SizedBox(height: 8),
+              Container(
+                constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.15),
+                decoration: BoxDecoration(
+                  color: Colors.blue.shade50,
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: Colors.blue.shade100),
+                ),
+                child: SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: analysis.suggestions.map((suggestion) => Padding(
+                        padding: const EdgeInsets.only(bottom: 8),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Icon(Icons.tips_and_updates, size: 16, color: Colors.blue),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              child: Text(
+                                suggestion,
+                                style: const TextStyle(fontSize: 14),
+                                overflow: TextOverflow.visible,
+                              ),
+                            ),
+                          ],
+                        ),
+                      )).toList(),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
+            ],
             
             // Buttons
             Row(
