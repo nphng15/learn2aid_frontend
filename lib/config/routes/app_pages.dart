@@ -6,8 +6,11 @@ import 'package:learn2aid/features/presentation/modules/auth/register/screens/re
 import 'package:learn2aid/features/presentation/modules/auth/loading/loading_binding.dart';
 import 'package:learn2aid/features/presentation/modules/auth/loading/screens/loading_screen.dart';
 import '../../features/presentation/modules/dashboard/screens/dashboard_page.dart';
+import '../../features/presentation/modules/dashboard/dashboard_binding.dart';
 import '../../features/presentation/modules/quiz/screens/quiz_page.dart';
 import '../../features/presentation/modules/lesson/screens/lesson_page.dart';
+import '../../features/presentation/modules/profile/screens/profile_screen.dart';
+import '../../features/presentation/modules/profile/profile_binding.dart';
 import 'app_routes.dart';
 
 abstract class AppPages {
@@ -21,25 +24,28 @@ abstract class AppPages {
       name: AppRoutes.login,
       page: () => const LoginScreen(),
       binding: LoginBinding(),
-      ),
+    ),
     GetPage(
       name: AppRoutes.register, 
       page: () => const RegisterScreen()
-      ),
+    ),
     GetPage(
       name: AppRoutes.dashboard,
       page: () => const DashboardPage(),
-      // binding: DashboardBinding(),
+      binding: DashboardBinding(),
     ),
     GetPage(
       name: AppRoutes.quiz,
       page: () => const QuizPage(),
-      // binding: DashboardBinding(),
     ),
     GetPage(
       name: AppRoutes.lesson,
       page: () => const LessonPage(),
-      // binding: DashboardBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.profile,
+      page: () => const ProfileScreen(),
+      binding: ProfileBinding(),
     ),
   ];
 }

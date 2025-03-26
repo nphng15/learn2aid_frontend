@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../login_controller.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:learn2aid/config/routes/app_routes.dart';
 import 'package:learn2aid/config/theme/app_color.dart';
@@ -10,7 +11,7 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Get device size to make it responsive
+    final loginCtrl = Get.find<LoginController>(); // Gọi LoginController
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
 
@@ -21,14 +22,14 @@ class LoginScreen extends StatelessWidget {
         height: screenHeight,
         child: Stack(
           children: [
-            // Blue background covering the screen
+            // Background
             Container(
               width: screenWidth,
               height: screenHeight,
               color: AppColors.backgroundBlue,
             ),
 
-            // White box on top
+            // White box
             Positioned(
               top: 0.257 * screenHeight,
               left: 0,
@@ -45,7 +46,7 @@ class LoginScreen extends StatelessWidget {
               ),
             ),
 
-            // "Login" title
+            // Title
             Positioned(
               top: 0.315 * screenHeight,
               left: 0.125 * screenWidth,
@@ -59,7 +60,7 @@ class LoginScreen extends StatelessWidget {
               ),
             ),
 
-            // Our login form
+            // Login Form
             Positioned(
               top: 0.442 * screenHeight,
               left: 0.047 * screenWidth,
@@ -82,17 +83,17 @@ class LoginScreen extends StatelessWidget {
               ),
             ),
 
-            // Social buttons row
+            // Social buttons (Google, Facebook, Apple)
             Positioned(
               top: 0.8261 * screenHeight,
               left: 0.172 * screenWidth,
               child: Row(
                 children: [
-                  _socialButton(screenWidth, screenHeight),
+                  _socialButton(screenWidth, screenHeight, Icons.g_mobiledata, loginCtrl.loginWithGoogle),
                   SizedBox(width: 0.038 * screenWidth),
-                  _socialButton(screenWidth, screenHeight),
+                  _socialButton(screenWidth, screenHeight, Icons.facebook, () => print("Facebook Login")),
                   SizedBox(width: 0.038 * screenWidth),
-                  _socialButton(screenWidth, screenHeight),
+                  _socialButton(screenWidth, screenHeight, Icons.apple, () => print("Apple Login")),
                 ],
               ),
             ),
@@ -131,23 +132,26 @@ class LoginScreen extends StatelessWidget {
     );
   }
 
-  // Mock social login button
-  Widget _socialButton(double screenWidth, double screenHeight) {
-    return Container(
-      width: 0.189 * screenWidth,
-      height: 0.0429 * screenHeight,
-      decoration: BoxDecoration(
-        color: AppColors.white,
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(
-          color: AppColors.grey4,
-          width: 0.5,
+  // Social login button (dynamic)
+  Widget _socialButton(double screenWidth, double screenHeight, IconData icon, VoidCallback onTap) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: 0.189 * screenWidth,
+        height: 0.0429 * screenHeight,
+        decoration: BoxDecoration(
+          color: AppColors.white,
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(
+            color: AppColors.grey4,
+            width: 0.5,
+          ),
         ),
-      ),
-      child: Icon(
-        Icons.ac_unit,
-        size: 0.025 * screenHeight,
-        color: AppColors.primary,
+        child: Icon(
+          icon,
+          size: 0.025 * screenHeight,
+          color: AppColors.primary,
+        ),
       ),
     );
   }

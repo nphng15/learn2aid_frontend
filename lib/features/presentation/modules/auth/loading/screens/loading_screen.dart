@@ -1,9 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../loading_controller.dart';
+import 'package:learn2aid/config/routes/app_routes.dart';
+import 'package:learn2aid/features/presentation/modules/auth/auth_controller.dart';
 
-class LoadingScreen extends GetView<LoadingController> {
+class LoadingScreen extends StatefulWidget {
   const LoadingScreen({Key? key}) : super(key: key);
+
+  @override
+  _LoadingScreenState createState() => _LoadingScreenState();
+}
+
+class _LoadingScreenState extends State<LoadingScreen> {
+  final AuthController authController = Get.find<AuthController>();
+
+  @override
+  void initState() {
+    super.initState();
+    _navigateToNextScreen();
+  }
+
+  void _navigateToNextScreen() async {
+    await Future.delayed(const Duration(seconds: 2)); // Hiệu ứng loading
+    
+    if (authController.authToken.isNotEmpty) {
+      Get.offAllNamed(AppRoutes.dashboard); // Đã đăng nhập → vào Dashboard
+    } else {
+      Get.offAllNamed(AppRoutes.login); // Chưa đăng nhập → vào Login
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -14,35 +38,19 @@ class LoadingScreen extends GetView<LoadingController> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // Phần dấu cộng
-              // Thay Icon(...) bằng Image.asset(...) khi có file ảnh
-              Container(
+              // Logo
+              SizedBox(
                 width: 150,
                 height: 150,
-                child: Image.asset('lib/assets/learn2aid.png')
+                child: Image.asset('lib/assets/learn2aid.png'),
               ),
               const SizedBox(height: 20),
 
-              // 4 dots
-              Obx(() {
-                return Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: List.generate(4, (index) {
-                    bool isActive = (controller.currentDot.value == index);
-                    return AnimatedContainer(
-                      duration: const Duration(milliseconds: 300),
-                      margin: const EdgeInsets.symmetric(horizontal: 4),
-                      width: 12,
-                      height: 12,
-                      decoration: BoxDecoration(
-                        color: isActive ? const Color(0xFF55C595) : Colors.black26,
-                        shape: BoxShape.circle,
-                      ),
-                    );
-                  }),
-                );
-              }),
+              // Hiệu ứng 4 dots loading
+              const CircularProgressIndicator(),
               const SizedBox(height: 20),
+
+              // Tiêu đề "Learn2Aid"
               const Text.rich(
                 TextSpan(
                   children: [
