@@ -7,6 +7,8 @@ class DashboardNavBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bool isOnLessonPage = Get.currentRoute == AppRoutes.lesson;
+    
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -44,14 +46,14 @@ class DashboardNavBar extends StatelessWidget {
               navButton(
                 icon: Icons.edit_outlined,
                 color: const Color(0xff215273),
-                onTap: () => Get.offNamed(AppRoutes.lesson),
-                isActive: Get.currentRoute == AppRoutes.lesson,
+                onTap: () => Get.offNamed(AppRoutes.quiz),
+                isActive: Get.currentRoute == AppRoutes.quiz,
               ),
               navButton(
                 icon: Icons.chat_bubble_outline,
                 color: const Color(0xff215273),
-                onTap: () => Get.offNamed(AppRoutes.quiz),
-                isActive: Get.currentRoute == AppRoutes.quiz,
+                onTap: () {},
+                // isActive: Get.currentRoute == AppRoutes.quiz,
               ),
               navButton(
                 icon: Icons.settings_outlined,
@@ -69,7 +71,7 @@ class DashboardNavBar extends StatelessWidget {
   Widget navButton({
     required IconData icon, 
     required Color color, 
-    required VoidCallback onTap, 
+    required VoidCallback? onTap, 
     bool isActive = false
   }) {
     return Expanded(

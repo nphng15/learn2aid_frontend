@@ -7,8 +7,12 @@ class LessonHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Center(
       child: Text(
-        'Lesson',
-        style: TextStyle(fontSize: 25, fontFamily: 'Space Mono'),
+        'Chi tiết bài học',
+        style: TextStyle(
+          fontSize: 20, 
+          fontWeight: FontWeight.bold,
+          fontFamily: 'Lexend',
+        ),
       ),
     );
   }

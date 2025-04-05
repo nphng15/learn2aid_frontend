@@ -3,6 +3,7 @@ import '../controllers/video_analysis_controller.dart';
 import '../../../../data/repositories/video_analysis_repository_impl.dart';
 import '../../../../domain/usecases/analyze_video_usecase.dart';
 import '../../../../domain/usecases/save_analysis_result_usecase.dart';
+import '../lesson_controller.dart';
 
 class LessonBinding implements Bindings {
   @override
@@ -26,12 +27,18 @@ class LessonBinding implements Bindings {
       permanent: true,
     );
     
-    // 3. Controller
+    // 3. Controllers
     Get.put<VideoAnalysisController>(
       VideoAnalysisController(
         analyzeVideoUseCase: Get.find<AnalyzeVideoUseCase>(),
         saveAnalysisResultUseCase: Get.find<SaveAnalysisResultUseCase>(),
       ),
+      permanent: true,
+    );
+    
+    // Đăng ký LessonController
+    Get.put<LessonController>(
+      LessonController(),
       permanent: true,
     );
   }

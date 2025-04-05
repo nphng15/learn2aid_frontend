@@ -1,12 +1,19 @@
 import 'package:flutter/material.dart';
 import 'dart:ui';
+import 'package:get/get.dart';
 import 'package:learn2aid/features/presentation/global_widgets/play_button.dart';
+import '../../../modules/dashboard/video_controller.dart';
 
 class LessonContent extends StatelessWidget {
   final String imageUrl;
   final String description;
   final int durationInSeconds;
   final double progress;
+  final String title;
+  final String category;
+  final String videoId;
+  final String videoUrl;
+  final VideoController? videoController;
   
   const LessonContent({
     super.key,
@@ -16,6 +23,11 @@ class LessonContent extends StatelessWidget {
                        'Vestibulum malesuada nisl tortor, tincidunt pulvinar massa lacinia ut.',
     this.durationInSeconds = 120,
     this.progress = 0.6,
+    this.title = 'Tiêu đề video',
+    this.category = 'Phân loại',
+    this.videoId = '',
+    this.videoUrl = '',
+    this.videoController,
   });
 
   @override
@@ -34,36 +46,88 @@ class LessonContent extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Phần ảnh 
+            // Header với tiêu đề
+            Padding(
+              padding: const EdgeInsets.only(bottom: 6),
+              child: Text(
+                title,
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'Lexend',
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+            // Phần ảnh - giảm flex để thu nhỏ kích thước còn khoảng 1/3 card
             Expanded(
-              flex: 5,
+              flex: 3, // Giảm từ 5 xuống 3 (chiếm khoảng 1/3 của card)
               child: Stack(
+                fit: StackFit.expand,
                 children: [
-                  Container(
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      image: imageUrl.isNotEmpty 
-                          ? DecorationImage(
-                              image: NetworkImage(imageUrl),
-                              fit: BoxFit.cover,
-                            )
-                          : null,
-                      color: const Color.fromRGBO(217, 217, 217, 1),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: Container(
+                      width: double.infinity,
+                      height: double.infinity,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        image: imageUrl.isNotEmpty 
+                            ? DecorationImage(
+                                image: NetworkImage(imageUrl),
+                                fit: BoxFit.cover,
+                              )
+                            : null,
+                        color: const Color.fromRGBO(217, 217, 217, 1),
+                      ),
                     ),
                   ),
+                  // Hiển thị tiến độ ở góc trên bên phải - giảm kích thước
                   Positioned(
-                    top: 10,
-                    right: 10,
-                    child: progressIndicator(progress),
+                    top: 8,
+                    right: 8,
+                    child: videoController != null
+                        ? Obx(() => progressIndicator(videoController!.getVideoProgress(videoId)))
+                        : progressIndicator(progress),
+                  ),
+                  // Hiển thị danh mục ở góc dưới bên trái đè lên video
+                  Positioned(
+                    left: 8,
+                    bottom: 8,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 6,
+                        vertical: 3,
+                      ),
+                      decoration: BoxDecoration(
+                        color: const Color(0xff215273),
+                        borderRadius: BorderRadius.circular(4),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.2),
+                            blurRadius: 4,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      child: Text(
+                        category,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 10, // Giảm từ 12 xuống 10
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
                   ),
                 ],
               ),
             ),
-            const SizedBox(height: 16),
-            // Phần mô tả
+            const SizedBox(height: 8), // Giảm từ 10 xuống 8
+            // Phần mô tả - tăng flex để hiển thị nhiều nội dung hơn
             Expanded(
-              flex: 4,
+              flex: 6, // Tăng từ 4 lên 6 (chiếm khoảng 2/3 của card)
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -71,15 +135,15 @@ class LessonContent extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       const Text(
-                        'Description',
+                        'Mô tả',
                         style: TextStyle(
-                          fontSize: 20,
+                          fontSize: 16,
                           fontWeight: FontWeight.bold,
                           fontFamily: 'Lexend',
                         ),
                       ),
                       Text(
-                        '${(durationInSeconds / 60).floor()} min',
+                        '${(durationInSeconds / 60).floor()} phút',
                         style: const TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
@@ -89,7 +153,7 @@ class LessonContent extends StatelessWidget {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 6), 
                   Expanded(
                     child: SingleChildScrollView(
                       child: Text(
@@ -97,13 +161,74 @@ class LessonContent extends StatelessWidget {
                         style: const TextStyle(
                           fontSize: 14,
                           fontFamily: 'Nunito Sans',
-                          height: 1.5,
+                          height: 1.4,
                         ),
                       ),
                     ),
                   ),
-                  const SizedBox(height: 8),
-                  const Center(child: PlayButton()),
+                  const SizedBox(height: 6),
+                  // Nút xem video
+                  Center(
+                    child: InkWell(
+                      onTap: () {
+                        if (videoUrl.isNotEmpty && videoController != null) {
+                          videoController!.openVideo(videoUrl, videoId);
+                        }
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 24,
+                          vertical: 8,
+                        ),
+                        decoration: BoxDecoration(
+                          color: const Color(0xff55c595),
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                        child: videoController != null
+                          ? Obx(() {
+                              final double currentProgress = videoController!.getVideoProgress(videoId);
+                              return Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(
+                                    currentProgress >= 0.95
+                                      ? Icons.check_circle_outline
+                                      : Icons.play_circle_outline,
+                                    color: Colors.white,
+                                  ),
+                                  SizedBox(width: 8),
+                                  Text(
+                                    currentProgress >= 0.95
+                                      ? 'Đã xem'
+                                      : 'Xem video',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ],
+                              );
+                            })
+                          : const Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(
+                                  Icons.play_circle_outline,
+                                  color: Colors.white,
+                                ),
+                                SizedBox(width: 8),
+                                Text(
+                                  'Xem video',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -117,8 +242,8 @@ class LessonContent extends StatelessWidget {
     final int percent = (value * 100).round();
     
     return Container(
-      width: 40,
-      height: 40,
+      width: 32, // Giảm từ 40 xuống 32
+      height: 32, // Giảm từ 40 xuống 32
       decoration: BoxDecoration(
         color: Colors.white.withOpacity(0.7),
         shape: BoxShape.circle,
@@ -136,18 +261,18 @@ class LessonContent extends StatelessWidget {
             alignment: Alignment.center,
             children: [
               SizedBox(
-                width: 30,
-                height: 30,
+                width: 24, // Giảm từ 30 xuống 24
+                height: 24, // Giảm từ 30 xuống 24
                 child: CircularProgressIndicator(
                   value: value,
-                  strokeWidth: 4,
+                  strokeWidth: 3, // Giảm từ 4 xuống 3
                   backgroundColor: Colors.grey[300],
                   valueColor: const AlwaysStoppedAnimation<Color>(Color(0xff55c595)),
                 ),
               ),
               Text(
-                '$percent',
-                style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                '$percent%',
+                style: const TextStyle(fontSize: 8, fontWeight: FontWeight.bold), // Giảm từ 10 xuống 8
               ),
             ],
           ),
