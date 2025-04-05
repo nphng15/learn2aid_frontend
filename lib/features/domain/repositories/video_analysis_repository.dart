@@ -7,9 +7,9 @@ abstract class VideoAnalysisRepository {
   // [movementType] - Loại động tác cần phân tích (ví dụ: cpr, recovery_position, ...)
   Future<VideoAnalysis> analyzeVideo(File videoFile, {String movementType = 'cpr'});
   
-  // Lưu kết quả phân tích vào local hoặc cloud storage
-  Future<bool> saveAnalysisResult(VideoAnalysis analysis);
+  // // Lưu kết quả phân tích vào local hoặc cloud storage
+  // Future<bool> saveAnalysisResult(VideoAnalysis analysis);
   
-  // Lấy lịch sử phân tích video
-  Future<List<VideoAnalysis>> getAnalysisHistory();
+  // // Lấy lịch sử phân tích video
+  // Future<List<VideoAnalysis>> getAnalysisHistory();
 } 

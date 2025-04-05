@@ -23,20 +23,13 @@ class LessonInteractive extends StatelessWidget {
     final controller = Get.find<VideoAnalysisController>();
     
     return Container(
-      width: MediaQuery.of(context).size.width * 0.85,
-      height: MediaQuery.of(context).size.height * 0.58,
+      width: MediaQuery.of(context).size.width * 0.88,
+      height: MediaQuery.of(context).size.height * 0.61,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: const Color.fromRGBO(230, 230, 230, 1),
+        color: const Color.fromARGB(255, 255, 255, 255),
         borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.2),
-            blurRadius: 10,
-            spreadRadius: 2,
-            offset: const Offset(0, 5),
-          ),
-        ],
+        border: Border.all(color: const Color(0xff215273), width: 2),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -223,7 +216,7 @@ class LessonInteractive extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 32),
           decoration: BoxDecoration(
-            color: isDisabled ? Colors.grey : Colors.green,
+            color: isDisabled ? Colors.grey : const Color(0xff55c595),
             borderRadius: BorderRadius.circular(60),
           ),
           child: controller.isLoading.value

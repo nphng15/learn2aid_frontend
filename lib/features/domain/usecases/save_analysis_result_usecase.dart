@@ -6,7 +6,7 @@ class SaveAnalysisResultUseCase {
 
   SaveAnalysisResultUseCase(this.repository);
 
-  Future<bool> execute(VideoAnalysis analysis) {
-    return repository.saveAnalysisResult(analysis);
-  }
+  // Future<bool> execute(VideoAnalysis analysis) {
+  //   return repository.saveAnalysisResult(analysis);
+  // }
 } 

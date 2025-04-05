@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import '../../../../domain/entities/video_analysis.dart';
+import './analysis_details_page.dart';
 
 class AnalysisResultDialog extends StatelessWidget {
   final VideoAnalysis analysis;
@@ -15,196 +17,150 @@ class AnalysisResultDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return Dialog(
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(20),
       ),
       elevation: 0,
       backgroundColor: Colors.transparent,
       child: Container(
-        padding: const EdgeInsets.all(20),
+        constraints: const BoxConstraints(maxWidth: 340),
+        padding: const EdgeInsets.all(24),
         decoration: BoxDecoration(
           color: Colors.white,
           shape: BoxShape.rectangle,
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: const [
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [
             BoxShadow(
-              color: Colors.black26,
-              blurRadius: 10.0,
-              offset: Offset(0.0, 10.0),
+              color: Colors.black.withOpacity(0.1),
+              blurRadius: 10,
+              offset: const Offset(0, 5),
             ),
           ],
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              'Kết quả phân tích video',
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
+            // Tiêu đề kết quả
+            const Text(
+              'Analysis Results',
+              style: TextStyle(
+                fontSize: 24,
                 fontWeight: FontWeight.bold,
-                color: Theme.of(context).primaryColor,
+                fontFamily: 'Lexend',
+                color: Color(0xff215273),
               ),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 24),
             
-            // Hiển thị điểm số
-            Row(
-              children: [
-                const Icon(Icons.star, color: Colors.amber, size: 28),
-                const SizedBox(width: 8),
-                Text(
-                  'Điểm số: ${analysis.score.toStringAsFixed(1)}/100',
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 8),
-            
-            // Thêm thanh tiến trình điểm số
-            ClipRRect(
-              borderRadius: BorderRadius.circular(8),
-              child: LinearProgressIndicator(
-                value: analysis.score / 100,
-                minHeight: 8,
-                backgroundColor: Colors.grey.shade200,
-                valueColor: AlwaysStoppedAnimation<Color>(
-                  analysis.score >= 80 ? Colors.green :
-                  analysis.score >= 60 ? Colors.blue :
-                  analysis.score >= 40 ? Colors.orange : 
-                  Colors.red,
-                ),
-              ),
-            ),
-            const SizedBox(height: 16),
-            
-            // Hiển thị thông báo offline nếu cần
-            if (analysis.comments.any((c) => c.contains('offline')))
-              Container(
-                padding: const EdgeInsets.all(10),
-                margin: const EdgeInsets.only(bottom: 16),
-                decoration: BoxDecoration(
-                  color: Colors.amber.shade100,
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: Colors.amber.shade700),
-                ),
-                child: Row(
-                  children: [
-                    Icon(Icons.warning_amber_rounded, color: Colors.amber.shade800),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: Text(
-                        'Đang sử dụng phân tích offline do không thể kết nối tới AI.',
-                        style: TextStyle(color: Colors.amber.shade900),
+            // Điểm số với CircularProgressIndicator
+            SizedBox(
+              width: 140,
+              height: 140,
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  SizedBox(
+                    width: 140,
+                    height: 140,
+                    child: CircularProgressIndicator(
+                      value: analysis.score / 100,
+                      strokeWidth: 8,
+                      backgroundColor: Colors.grey[200],
+                      valueColor: const AlwaysStoppedAnimation<Color>(
+                        Color(0xff55c595),
                       ),
                     ),
-                  ],
-                ),
-              ),
-            
-            // Hiển thị nhận xét
-            Text(
-              'Nhận xét:',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Container(
-              constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.2),
-              decoration: BoxDecoration(
-                color: Colors.grey.shade50,
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: Colors.grey.shade300),
-              ),
-              child: SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: analysis.comments.map((comment) => Padding(
-                      padding: const EdgeInsets.only(bottom: 8),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text('• ', style: TextStyle(fontWeight: FontWeight.bold)),
-                          Expanded(
-                            child: Text(
-                              comment,
-                              style: const TextStyle(fontSize: 14),
-                              overflow: TextOverflow.visible,
-                            ),
-                          ),
-                        ],
-                      ),
-                    )).toList(),
                   ),
-                ),
-              ),
-            ),
-            const SizedBox(height: 16),
-            
-            // Hiển thị đề xuất cải thiện - Chỉ hiển thị nếu có dữ liệu
-            if (analysis.suggestions.isNotEmpty) ...[
-              Text(
-                'Đề xuất cải thiện:',
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Container(
-                constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.15),
-                decoration: BoxDecoration(
-                  color: Colors.blue.shade50,
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: Colors.blue.shade100),
-                ),
-                child: SingleChildScrollView(
-                  child: Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: analysis.suggestions.map((suggestion) => Padding(
-                        padding: const EdgeInsets.only(bottom: 8),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Icon(Icons.tips_and_updates, size: 16, color: Colors.blue),
-                            const SizedBox(width: 8),
-                            Expanded(
-                              child: Text(
-                                suggestion,
-                                style: const TextStyle(fontSize: 14),
-                                overflow: TextOverflow.visible,
-                              ),
-                            ),
-                          ],
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        '${analysis.score.round()}',
+                        style: const TextStyle(
+                          fontSize: 48,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xff55c595),
                         ),
-                      )).toList(),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 24),
+            
+            // Mô tả kết quả
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.grey[50],
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: Colors.grey[200]!),
+              ),
+              child: Text(
+                _getShortDescription(analysis),
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontFamily: 'Nunito Sans',
+                  height: 1.5,
+                  color: Color(0xff333333),
+                ),
+              ),
+            ),
+            const SizedBox(height: 32),
+            
+            // Nút điều hướng
+            Row(
+              children: [
+                // View details button
+                Expanded(
+                  child: OutlinedButton(
+                    onPressed: () {
+                      // Đóng dialog trước
+                      Navigator.of(context).pop();
+                      
+                      // Mở trang chi tiết
+                      Get.to(() => AnalysisDetailsPage(analysis: analysis));
+                    },
+                    style: OutlinedButton.styleFrom(
+                      side: const BorderSide(color: Color(0xff215273)),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                    ),
+                    child: const Text(
+                      'View details',
+                      style: TextStyle(
+                        color: Color(0xff215273),
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
                 ),
-              ),
-              const SizedBox(height: 20),
-            ],
-            
-            // Buttons
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                TextButton(
-                  onPressed: () => Navigator.pop(context),
-                  child: const Text('Đóng'),
-                ),
-                const SizedBox(width: 8),
-                ElevatedButton(
-                  onPressed: () {
-                    if (onSave != null) onSave!();
-                    Navigator.pop(context);
-                  },
-                  child: const Text('Lưu kết quả'),
+                const SizedBox(width: 16),
+                // Continue button
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      if (onSave != null) onSave!();
+                      Navigator.of(context).pop();
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xff55c595),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                    ),
+                    child: const Text(
+                      'Continue',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -212,5 +168,16 @@ class AnalysisResultDialog extends StatelessWidget {
         ),
       ),
     );
+  }
+  
+  // Trả về mô tả ngắn gọn dựa trên phân tích
+  String _getShortDescription(VideoAnalysis analysis) {
+    // Nếu có điểm mạnh thì dùng điểm mạnh đầu tiên, ngược lại dùng mô tả chung
+    if (analysis.strengths.isNotEmpty) {
+      return analysis.strengths.first;
+    } else if (analysis.analysis.isNotEmpty) {
+      return analysis.analysis;
+    }
+    return "Your movement has been analyzed!";
   }
 } 

@@ -85,7 +85,7 @@ class VideoAnalysisController extends GetxController {
       analysisResult.value = result;
       
       // Lưu kết quả phân tích
-      await _saveAnalysisResultUseCase.execute(result);
+      // await _saveAnalysisResultUseCase.execute(result);
       
     } catch (e) {
       hasError.value = true;

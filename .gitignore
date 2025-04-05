@@ -16,6 +16,7 @@ documents/
 ai_service/
 backend/
 video_analysis_documentation.md 
+video_analysis_documentation_part1.md
 # IntelliJ related
 *.iml
 *.ipr

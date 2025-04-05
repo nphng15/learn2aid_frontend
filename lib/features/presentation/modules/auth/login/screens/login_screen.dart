@@ -89,11 +89,11 @@ class LoginScreen extends StatelessWidget {
               left: 0.172 * screenWidth,
               child: Row(
                 children: [
-                  _socialButton(screenWidth, screenHeight, Icons.g_mobiledata, loginCtrl.loginWithGoogle),
+                  _socialButton(screenWidth, screenHeight, Image.asset('lib/assets/apple-logo.png'), () => print("Apple Login")),
                   SizedBox(width: 0.038 * screenWidth),
-                  _socialButton(screenWidth, screenHeight, Icons.facebook, () => print("Facebook Login")),
+                  _socialButton(screenWidth, screenHeight, Image.asset('lib/assets/facebook-logo.png'), () => print("Facebook Login")),
                   SizedBox(width: 0.038 * screenWidth),
-                  _socialButton(screenWidth, screenHeight, Icons.apple, () => print("Apple Login")),
+                  _socialButton(screenWidth, screenHeight, Image.asset('lib/assets/google-logo.png'), loginCtrl.loginWithGoogle),
                 ],
               ),
             ),
@@ -133,7 +133,7 @@ class LoginScreen extends StatelessWidget {
   }
 
   // Social login button (dynamic)
-  Widget _socialButton(double screenWidth, double screenHeight, IconData icon, VoidCallback onTap) {
+  Widget _socialButton(double screenWidth, double screenHeight, Image icon, VoidCallback onTap) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -147,10 +147,12 @@ class LoginScreen extends StatelessWidget {
             width: 0.5,
           ),
         ),
-        child: Icon(
-          icon,
-          size: 0.025 * screenHeight,
-          color: AppColors.primary,
+        child: Center(
+          child: SizedBox(
+            width: 0.025 * screenHeight,
+            height: 0.025 * screenHeight,
+            child: icon,
+          ),
         ),
       ),
     );

@@ -10,7 +10,7 @@ class LessonPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F5F5), 
+      backgroundColor: Colors.white, 
       body: SafeArea(
         child: Column(
           children: [
@@ -27,20 +27,26 @@ class LessonPage extends StatelessWidget {
             Expanded(
               child: PageView(
                 controller: PageController(viewportFraction: 0.85),
+                physics: const BouncingScrollPhysics(),
                 children: [
-                  const Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      LessonContent(),
-                      SizedBox(height: 8),
-                    ],
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: const Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        LessonContent(),
+                      ],
+                    ),
                   ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      LessonInteractive(),
-                    ],
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        LessonInteractive(),
+                      ],
+                    ),
                   ),
                 ],
               ),

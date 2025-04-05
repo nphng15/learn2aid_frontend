@@ -205,9 +205,8 @@ class QuizResults extends StatelessWidget {
   }
 
   Color _getScoreColor(int percentageScore) {
-    if (percentageScore >= 80) return Colors.green;
-    if (percentageScore >= 60) return AppColors.primary;
-    if (percentageScore >= 40) return Colors.orange;
+    if (percentageScore >= 80) return const Color(0xff55c595);
+    if (percentageScore >= 60) return Colors.orange;
     return Colors.red;
   }
 

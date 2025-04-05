@@ -5,7 +5,7 @@ class AppColors {
 
   // Primary and Secondary Colors
   static const Color primary = Color(0xFF215273);     // Màu xanh đậm
-  static const Color secondary = Color(0xFF55C595);   // Màu xanh lá
+  static const Color secondary = Color(0xff55c595);   // Màu xanh lá
 
   // Background Colors
   static const Color backgroundBlue = Color(0xFF71C5FF); // Màu xanh nền Login
@@ -24,6 +24,6 @@ class AppColors {
   static const Color error = Color(0xFFF24141); // Đỏ cảnh báo
 
   // Button Colors
-  static const Color buttonPrimary = Color(0xFF55C595);   // Nút chính
+  static const Color buttonPrimary = Color(0xff55c595);   // Nút chính
   static const Color buttonDisabled = Color(0xFFB1B1B1);  // Nút bị vô hiệu
 }

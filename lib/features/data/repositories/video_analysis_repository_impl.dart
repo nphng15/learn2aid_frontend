@@ -10,13 +10,7 @@ import '../models/video_analysis_model.dart';
 import '../../../core/error/exceptions.dart';
 
 class VideoAnalysisRepositoryImpl implements VideoAnalysisRepository {
-  // Cấu hình URL máy chủ backend - thay bằng IP thực tế khi triển khai
-  // 10.0.2.2 là địa chỉ localhost trên emulator Android
-  // 127.0.0.1 sẽ hoạt động trên web
-  final String _baseUrl = 'http://192.168.1.248:8000'; 
-  final http.Client _client;
-  
-  VideoAnalysisRepositoryImpl({http.Client? client}) : _client = client ?? http.Client();
+  final String _baseUrl = 'https://learn2aid-ai-service.onrender.com'; 
   
   @override
   Future<VideoAnalysis> analyzeVideo(File videoFile, {String movementType = 'cpr'}) async {
@@ -37,67 +31,41 @@ class VideoAnalysisRepositoryImpl implements VideoAnalysisRepository {
       request.fields['movement_name'] = movementType;
       
       try {
-        // Đặt timeout cho request
-        final streamedResponse = await request.send().timeout(
-          const Duration(seconds: 30),
-          onTimeout: () {
-            throw TimeoutException('Quá thời gian kết nối tới server');
-          },
-        );
+        final streamedResponse = await request.send();
         
         final response = await http.Response.fromStream(streamedResponse);
         
         if (response.statusCode == 200) {
-          final jsonData = json.decode(response.body);
+          final decodedBody = utf8.decode(response.bodyBytes);  
+          final jsonData = json.decode(decodedBody);
           
-          double scoreValue = 0.0;
-          if (jsonData['point'] != null) {
-            try {
-              // Nếu point là String, cố gắng chuyển đổi sang double
-              if (jsonData['point'] is String) {
-                scoreValue = double.tryParse(jsonData['point']) ?? 0.0;
-              } else {
-                scoreValue = (jsonData['point'] as num).toDouble();
-              }
-            } catch (e) {
-              print('Lỗi khi chuyển đổi point thành số: $e');
-              scoreValue = 0.0;
-            }
-          }
-          
-          return VideoAnalysisModel(
-            id: DateTime.now().millisecondsSinceEpoch.toString(),
-            analysis: jsonData['comment'] ?? 'Phân tích video hoàn tất',
-            score: scoreValue,
-            comments: [jsonData['comment'] ?? 'Không có nhận xét chi tiết'],
-            suggestions: [
-              'Hãy tập trung vào kỹ thuật đúng.',
-              'Giữ nhịp đều đặn khi thực hiện động tác.',
-              'Đảm bảo tư thế chuẩn trong suốt quá trình thực hiện.'
-            ],
-            createdAt: DateTime.now(),
-          );
+          print('API Response: $jsonData');
+          // Chuyển đổi dữ liệu JSON sang VideoAnalysis thông qua VideoAnalysisModel
+          return VideoAnalysisModel.fromJson(jsonData);
         } else {
-          // Log lỗi và fallback về dữ liệu mẫu
-          print('Lỗi HTTP: ${response.statusCode} - ${response.body}');
-          return _getFallbackAnalysis('Không thể kết nối tới server phân tích');
+          
+          try {
+            final errorData = json.decode(response.body);
+            final errorMessage = errorData['error'] ?? 'Unknown server error';
+
+            return _getFallbackAnalysis('Server error: $errorMessage');
+          } catch (e) {
+            // Nếu không phải JSON, trả về lỗi HTTP
+            return _getFallbackAnalysis('HTTP Error: ${response.statusCode}');
+          }
         }
       } catch (connError) {
-        print('Lỗi kết nối: $connError');
-        
         if (connError is TimeoutException) {
           throw connError;
         } else {
-          throw NetworkException('Không thể kết nối tới server: $connError');
+          throw NetworkException('Cannot connect to server: $connError');
         }
       }
-    } catch (e) {
-      print('Lỗi xử lý video: $e');
-      
+    } catch (e) {  
       if (e is TimeoutException || e is NetworkException) {
         throw e;
       } else {
-        throw VideoAnalysisException('Lỗi xử lý video: $e');
+        throw VideoAnalysisException('Error processing video: $e');
       }
     }
   }
@@ -107,45 +75,51 @@ class VideoAnalysisRepositoryImpl implements VideoAnalysisRepository {
     return VideoAnalysisModel(
       id: DateTime.now().millisecondsSinceEpoch.toString(),
       analysis: 'Phân tích offline',
-      score: 75.0,
-      comments: [errorMessage, 'Đang sử dụng phân tích offline'],
-      suggestions: [
+      score: 0.0,
+      strengths: ['Chế độ ngoại tuyến vẫn hoạt động'],
+      improvements: [
         'Kiểm tra kết nối mạng của bạn',
         'Đảm bảo video có độ dài phù hợp (5-30 giây)',
         'Thử lại sau vài phút'
       ],
+      scoreBreakdown: {
+        'offline_mode': 0.0,
+      },
       createdAt: DateTime.now(),
     );
   }
   
-  @override
-  Future<bool> saveAnalysisResult(VideoAnalysis analysis) async {
-    try {
-      // Có thể triển khai lưu vào local storage hoặc gửi lên server
-      // Hiện tại chỉ trả về thành công
-      return true;
-    } catch (e) {
-      throw VideoAnalysisException('Lỗi khi lưu kết quả: $e');
-    }
-  }
+  // @override
+  // Future<bool> saveAnalysisResult(VideoAnalysis analysis) async {
+  //   try {
+  //     // Có thể triển khai lưu vào local storage hoặc gửi lên server
+  //     // Hiện tại chỉ trả về thành công
+  //     return true;
+  //   } catch (e) {
+  //     throw VideoAnalysisException('Lỗi khi lưu kết quả: $e');
+  //   }
+  // }
   
-  @override
-  Future<List<VideoAnalysis>> getAnalysisHistory() async {
-    try {
-      // TODO: Triển khai lấy lịch sử phân tích từ local hoặc server
-      return List.generate(
-        5,
-        (index) => VideoAnalysisModel(
-          id: 'history_${index}_${DateTime.now().millisecondsSinceEpoch}',
-          analysis: 'Phân tích trước đó #$index',
-          score: 70.0 + (index * 5.0),
-          comments: ['Đây là lịch sử phân tích'],
-          suggestions: ['Cải thiện kỹ thuật qua các bài thực hành'],
-          createdAt: DateTime.now().subtract(Duration(days: index)),
-        ),
-      );
-    } catch (e) {
-      throw VideoAnalysisException('Lỗi khi lấy lịch sử phân tích: $e');
-    }
-  }
+  // @override
+  // Future<List<VideoAnalysis>> getAnalysisHistory() async {
+  //   try {
+  //     // TODO: Triển khai lấy lịch sử phân tích từ local hoặc server
+  //     return List.generate(
+  //       5,
+  //       (index) => VideoAnalysisModel(
+  //         id: 'history_${index}_${DateTime.now().millisecondsSinceEpoch}',
+  //         analysis: 'Phân tích trước đó #$index',
+  //         score: 70.0 + (index * 5.0),
+  //         strengths: ['Lưu trữ lịch sử phân tích thành công'],
+  //         improvements: ['Cải thiện kỹ thuật qua các bài thực hành'],
+  //         scoreBreakdown: {
+  //           'historical_data': 70.0 + (index * 5.0),
+  //         },
+  //         createdAt: DateTime.now().subtract(Duration(days: index)),
+  //       ),
+  //     );
+  //   } catch (e) {
+  //     throw VideoAnalysisException('Lỗi khi lấy lịch sử phân tích: $e');
+  //   }
+//  }
 } 

@@ -5,28 +5,75 @@ class VideoAnalysisModel extends VideoAnalysis {
     required String id,
     required String analysis, 
     required double score,
-    required List<String> comments,
-    required List<String> suggestions,
+    required List<String> strengths,
+    required List<String> improvements,
+    required Map<String, dynamic> scoreBreakdown,
     required DateTime createdAt,
   }) : super(
     id: id,
     analysis: analysis,
     score: score,
-    comments: comments,
-    suggestions: suggestions,
+    strengths: strengths,
+    improvements: improvements,
+    scoreBreakdown: scoreBreakdown,
     createdAt: createdAt,
   );
 
   factory VideoAnalysisModel.fromJson(Map<String, dynamic> json) {
+    // Lấy điểm tổng
+    double scoreValue = 0.0;
+    if (json['total_point'] != null) {
+      try {
+        if (json['total_point'] is String) {
+          // Nếu là chuỗi có định dạng "X/100", tách lấy phần số trước dấu "/"
+          if (json['total_point'].toString().contains('/')) {
+            scoreValue = double.tryParse(json['total_point'].toString().split('/').first) ?? 0.0;
+          } else {
+            scoreValue = double.tryParse(json['total_point']) ?? 0.0;
+          }
+        } else {
+          scoreValue = (json['total_point'] as num).toDouble();
+        }
+      } catch (e) {
+        print('Lỗi khi chuyển đổi điểm thành số: $e');
+      }
+    }
+
+    // Lấy phân tích chi tiết
+    final detailedSummary = json['detailed_summary'] ?? {};
+    
+    // Comment (phân tích chung) - sử dụng nếu có, nếu không thì dùng text mặc định
+    String analysisText = 'Phân tích video hoàn tất';
+    if (detailedSummary['comment'] != null) {
+      analysisText = detailedSummary['comment'];
+    }
+    
+    // Lấy điểm mạnh
+    List<String> strengths = [];
+    if (detailedSummary['strengths'] != null) {
+      strengths = List<String>.from(detailedSummary['strengths']);
+    }
+    
+    // Lấy điểm cần cải thiện
+    List<String> improvements = [];
+    if (detailedSummary['areas_for_improvement'] != null) {
+      improvements = List<String>.from(detailedSummary['areas_for_improvement']);
+    }
+    
+    // Lấy phân tích điểm theo từng danh mục
+    Map<String, dynamic> scoreBreakdown = {};
+    if (detailedSummary['score_breakdown'] != null) {
+      scoreBreakdown = Map<String, dynamic>.from(detailedSummary['score_breakdown']);
+    }
+
     return VideoAnalysisModel(
-      id: json['id'] ?? '',
-      analysis: json['analysis'] ?? '',
-      score: (json['score'] ?? 0.0).toDouble(),
-      comments: List<String>.from(json['comments'] ?? []),
-      suggestions: List<String>.from(json['suggestions'] ?? []),
-      createdAt: json['createdAt'] != null 
-          ? DateTime.parse(json['createdAt']) 
-          : DateTime.now(),
+      id: DateTime.now().millisecondsSinceEpoch.toString(),
+      analysis: analysisText,
+      score: scoreValue,
+      strengths: strengths,
+      improvements: improvements,
+      scoreBreakdown: scoreBreakdown,
+      createdAt: DateTime.now(),
     );
   }
 
@@ -35,8 +82,9 @@ class VideoAnalysisModel extends VideoAnalysis {
       'id': id,
       'analysis': analysis,
       'score': score,
-      'comments': comments,
-      'suggestions': suggestions,
+      'strengths': strengths,
+      'improvements': improvements,
+      'scoreBreakdown': scoreBreakdown,
       'createdAt': createdAt.toIso8601String(),
     };
   }
