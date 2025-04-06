@@ -50,7 +50,6 @@ class LessonPage extends StatelessWidget {
                                 imageUrl: video.thumbnailUrl,
                                 description: video.description,
                                 durationInSeconds: video.durationInSeconds,
-                                progress: videoController.getVideoProgress(video.id),
                                 title: video.title,
                                 category: video.category,
                                 videoId: video.id,

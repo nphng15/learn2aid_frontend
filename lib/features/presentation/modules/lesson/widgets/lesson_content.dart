@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'dart:ui';
 import 'package:get/get.dart';
-import 'package:learn2aid/features/presentation/global_widgets/play_button.dart';
 import '../../../modules/dashboard/video_controller.dart';
 
 class LessonContent extends StatelessWidget {
   final String imageUrl;
   final String description;
   final int durationInSeconds;
-  final double progress;
   final String title;
   final String category;
   final String videoId;
@@ -22,7 +20,6 @@ class LessonContent extends StatelessWidget {
                        'Nullam tristique eros nec diam consectetur gravida. Nulla facilisi. '
                        'Vestibulum malesuada nisl tortor, tincidunt pulvinar massa lacinia ut.',
     this.durationInSeconds = 120,
-    this.progress = 0.6,
     this.title = 'Tiêu đề video',
     this.category = 'Phân loại',
     this.videoId = '',
@@ -82,14 +79,6 @@ class LessonContent extends StatelessWidget {
                         color: const Color.fromRGBO(217, 217, 217, 1),
                       ),
                     ),
-                  ),
-                  // Hiển thị tiến độ ở góc trên bên phải - giảm kích thước
-                  Positioned(
-                    top: 8,
-                    right: 8,
-                    child: videoController != null
-                        ? Obx(() => progressIndicator(videoController!.getVideoProgress(videoId)))
-                        : progressIndicator(progress),
                   ),
                   // Hiển thị danh mục ở góc dưới bên trái đè lên video
                   Positioned(
@@ -184,48 +173,23 @@ class LessonContent extends StatelessWidget {
                           color: const Color(0xff55c595),
                           borderRadius: BorderRadius.circular(30),
                         ),
-                        child: videoController != null
-                          ? Obx(() {
-                              final double currentProgress = videoController!.getVideoProgress(videoId);
-                              return Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Icon(
-                                    currentProgress >= 0.95
-                                      ? Icons.check_circle_outline
-                                      : Icons.play_circle_outline,
-                                    color: Colors.white,
-                                  ),
-                                  SizedBox(width: 8),
-                                  Text(
-                                    currentProgress >= 0.95
-                                      ? 'Đã xem'
-                                      : 'Xem video',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ],
-                              );
-                            })
-                          : const Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Icon(
-                                  Icons.play_circle_outline,
-                                  color: Colors.white,
-                                ),
-                                SizedBox(width: 8),
-                                Text(
-                                  'Xem video',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ],
+                        child: const Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              Icons.play_circle_outline,
+                              color: Colors.white,
                             ),
+                            SizedBox(width: 8),
+                            Text(
+                              'Xem video',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -233,49 +197,6 @@ class LessonContent extends StatelessWidget {
               ),
             ),
           ],
-        ),
-      ),
-    );
-  }
-
-  Widget progressIndicator(double value) {
-    final int percent = (value * 100).round();
-    
-    return Container(
-      width: 32, // Giảm từ 40 xuống 32
-      height: 32, // Giảm từ 40 xuống 32
-      decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.7),
-        shape: BoxShape.circle,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 2,
-          ),
-        ],
-      ),
-      child: ClipOval(
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
-          child: Stack(
-            alignment: Alignment.center,
-            children: [
-              SizedBox(
-                width: 24, // Giảm từ 30 xuống 24
-                height: 24, // Giảm từ 30 xuống 24
-                child: CircularProgressIndicator(
-                  value: value,
-                  strokeWidth: 3, // Giảm từ 4 xuống 3
-                  backgroundColor: Colors.grey[300],
-                  valueColor: const AlwaysStoppedAnimation<Color>(Color(0xff55c595)),
-                ),
-              ),
-              Text(
-                '$percent%',
-                style: const TextStyle(fontSize: 8, fontWeight: FontWeight.bold), // Giảm từ 10 xuống 8
-              ),
-            ],
-          ),
         ),
       ),
     );

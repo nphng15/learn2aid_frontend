@@ -132,9 +132,6 @@ class VideoController extends GetxController {
       // Cập nhật video đang xem
       addToInProgress(videoId);
       
-      // Lấy tiến trình hiện tại
-      final double currentProgress = getVideoProgress(videoId);
-      
       // Sử dụng url_launcher để mở video
       final Uri url = Uri.parse(videoUrl);
       final bool canLaunch = await canLaunchUrl(url);
@@ -143,32 +140,12 @@ class VideoController extends GetxController {
         // Hiển thị snackbar thông báo mở video
         Get.snackbar(
           'Đang mở video',
-          'Video đang được mở trong trình duyệt...',
+          'Video đang được mở trong ứng dụng...',
           snackPosition: SnackPosition.BOTTOM,
           duration: const Duration(seconds: 2),
         );
         
         await launchUrl(url, mode: LaunchMode.externalApplication);
-        
-        // Mô phỏng tiến trình xem video (thực tế sẽ dựa trên thời gian thực tế người dùng xem)
-        // Tăng tiến trình lên 15-30% sau mỗi lần xem
-        final random = DateTime.now().millisecondsSinceEpoch % 100 / 100; // Số ngẫu nhiên từ 0-1
-        double newProgress = currentProgress + (0.15 + (0.15 * random));
-        if (newProgress > 1.0) newProgress = 1.0;
-        
-        // Cập nhật tiến trình
-        updateVideoProgress(videoId, newProgress);
-        
-        // Hiển thị thông báo sau khi thoát video
-        Get.snackbar(
-          'Cập nhật tiến trình',
-          'Tiến trình xem: ${(newProgress * 100).toStringAsFixed(0)}%',
-          snackPosition: SnackPosition.BOTTOM,
-          duration: const Duration(seconds: 2),
-          backgroundColor: const Color(0xff55c595).withOpacity(0.7),
-          colorText: Colors.white,
-        );
-        
       } else {
         Get.snackbar(
           'Lỗi',
