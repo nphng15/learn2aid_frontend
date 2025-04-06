@@ -2,19 +2,45 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../domain/entities/video_analysis.dart';
 import './analysis_details_page.dart';
+import '../../lesson/lesson_controller.dart';
+import '../../dashboard/video_controller.dart';
 
 class AnalysisResultDialog extends StatelessWidget {
   final VideoAnalysis analysis;
   final VoidCallback? onSave;
+  final String videoId;
   
   const AnalysisResultDialog({
     super.key,
     required this.analysis,
     this.onSave,
+    required this.videoId,
   });
 
   @override
   Widget build(BuildContext context) {
+    final LessonController lessonController = Get.find<LessonController>();
+    final VideoController videoController = Get.find<VideoController>();
+    
+    // Debug logging
+    print('DEBUG - AnalysisResultDialog.build()');
+    print('DEBUG - Video ID ban đầu: $videoId');
+    
+    // Nếu không có videoId, thêm video thử nghiệm
+    String finalVideoId = videoId;
+    if (finalVideoId.isEmpty) {
+      // Kiểm tra video test đã có chưa, nếu chưa thì thêm vào
+      if (!videoController.hasVideoWithId('test_video_1')) {
+        videoController.addTestVideo();
+        print('DEBUG - Đã thêm video thử nghiệm vào danh sách');
+      }
+      finalVideoId = 'test_video_1';
+      print('DEBUG - Sử dụng video thử nghiệm ID: $finalVideoId');
+    }
+    
+    print('DEBUG - Video ID cuối cùng: $finalVideoId');
+    print('DEBUG - Analysis score: ${analysis.score}');
+    
     return Dialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20),
@@ -144,6 +170,40 @@ class AnalysisResultDialog extends StatelessWidget {
                   child: ElevatedButton(
                     onPressed: () {
                       if (onSave != null) onSave!();
+                      
+                      print('DEBUG - Continue button pressed');
+                      print('DEBUG - Video ID: $finalVideoId');
+                      
+                      // Đánh dấu video đã hoàn thành nếu có ID hợp lệ
+                      if (finalVideoId.isNotEmpty) {
+                        // Đánh dấu video đã hoàn thành nếu điểm > 80
+                        lessonController.markVideoAsCompletedWithScore(
+                          finalVideoId, 
+                          analysis.score
+                        );
+                        
+                        // Hiển thị thông báo nếu điểm > 80
+                        if (analysis.score > 80) {
+                          Get.snackbar(
+                            'Chúc mừng!',
+                            'Bạn đã hoàn thành video này với điểm ${analysis.score.round()}',
+                            snackPosition: SnackPosition.BOTTOM,
+                            backgroundColor: const Color(0xff55c595),
+                            colorText: Colors.white,
+                            duration: const Duration(seconds: 3),
+                          );
+                        }
+                      } else {
+                        print('DEBUG - ERROR: videoId rỗng trong Continue button');
+                        Get.snackbar(
+                          'Lỗi',
+                          'Không thể đánh dấu video hoàn thành: ID không hợp lệ',
+                          snackPosition: SnackPosition.BOTTOM,
+                          backgroundColor: Colors.red,
+                          colorText: Colors.white,
+                        );
+                      }
+                      
                       Navigator.of(context).pop();
                     },
                     style: ElevatedButton.styleFrom(

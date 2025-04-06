@@ -6,7 +6,7 @@ import 'dashboard_card.dart';
 
 class DashboardSection extends StatelessWidget {
   final String title;
-  final String sectionType; // "for_you", "in_progress", "custom"
+  final String sectionType; // "for_you", "in_progress", "completed", "custom"
   final List<VideoModel>? customVideos;
 
   const DashboardSection({
@@ -44,6 +44,8 @@ class DashboardSection extends StatelessWidget {
               videos = videoController.forYouVideos;
             } else if (sectionType == "in_progress") {
               videos = videoController.inProgressVideos;
+            } else if (sectionType == "completed") {
+              videos = videoController.completedVideos;
             } else {
               videos = customVideos ?? [];
               isLoading = false;
@@ -69,7 +71,9 @@ class DashboardSection extends StatelessWidget {
                         ? 'Không có video nào phù hợp'
                         : sectionType == "in_progress"
                             ? 'Bạn chưa xem video nào'
-                            : 'Không có video',
+                            : sectionType == "completed"
+                                ? 'Bạn chưa hoàn thành video nào'
+                                : 'Không có video',
                     style: const TextStyle(
                       fontFamily: 'Lexend',
                       color: Colors.grey,

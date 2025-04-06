@@ -21,14 +21,20 @@ class DashboardPage extends StatelessWidget {
                   children: [
                     // Section video đề xuất cho người dùng
                     const DashboardSection(
-                      title: "For you",
+                      title: "Dành cho bạn",
                       sectionType: "for_you",
                     ),
                     
                     // Section video đang xem dở
                     const DashboardSection(
-                      title: "In progress",
+                      title: "Đang học",
                       sectionType: "in_progress",
+                    ),
+                    
+                    // Section video đã hoàn thành
+                    const DashboardSection(
+                      title: "Đã hoàn thành", 
+                      sectionType: "completed",
                     ),
                   ],
                 ),

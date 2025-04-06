@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 import '../../../../features/data/models/video_model.dart';
 import '../../../../features/data/services/video_service.dart';
 import '../dashboard/video_controller.dart';
+import 'package:flutter/material.dart';
 
 class LessonController extends GetxController {
   final VideoService _videoService = VideoService();
@@ -24,6 +25,41 @@ class LessonController extends GetxController {
   //đánh dấu video đã hoàn thành
   void markVideoAsCompleted(String videoId) {
     _videoController.updateVideoProgress(videoId, 1.0);
+  }
+  
+  //đánh dấu video đã hoàn thành dựa trên điểm số
+  void markVideoAsCompletedWithScore(String videoId, double score) {
+    // Debug
+    print('DEBUG - markVideoAsCompletedWithScore');
+    print('DEBUG - Video ID: $videoId');
+    print('DEBUG - Score: $score');
+    
+    // Kiểm tra ID hợp lệ
+    if (videoId.isEmpty) {
+      print('DEBUG - ERROR: videoId rỗng');
+      Get.snackbar(
+        'Lỗi',
+        'Không thể đánh dấu video hoàn thành: ID không hợp lệ',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+      return;
+    }
+    
+    // Cập nhật tiến trình xem video thành 100%
+    _videoController.updateVideoProgress(videoId, 1.0);
+    
+    // Nếu điểm > 80, đánh dấu video đã hoàn thành 
+    if (score > 80) {
+      print('DEBUG - Đánh dấu video hoàn thành với điểm: $score');
+      _videoController.markVideoAsCompleted(videoId);
+      
+      // Thêm debug thông báo
+      print('DEBUG - Đã gọi markVideoAsCompleted()');
+    } else {
+      print('DEBUG - Không đánh dấu hoàn thành vì điểm dưới 80: $score');
+    }
   }
   
   //lấy video tiếp theo cùng danh mục

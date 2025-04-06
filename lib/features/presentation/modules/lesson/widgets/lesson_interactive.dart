@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import '../controllers/video_analysis_controller.dart';
 import './video_player_widget.dart';
 import './analysis_result_dialog.dart';
+import '../../dashboard/video_controller.dart';
 
 
 class LessonInteractive extends StatelessWidget {
@@ -288,11 +289,51 @@ class LessonInteractive extends StatelessWidget {
   }
   
   void _showAnalysisDialog(BuildContext context, VideoAnalysisController controller) {
+    // Lấy video ID từ LessonPage arguments
+    final Map<String, dynamic>? args = Get.arguments;
+    String videoId = args != null && args['video'] != null ? args['video'].id : '';
+    
+    // Debug: In ra thông tin videoId
+    print('DEBUG - Show Analysis Dialog');
+    print('DEBUG - Video ID: $videoId');
+    print('DEBUG - Video từ arguments: ${args != null ? args['video'] : 'null'}');
+    print('DEBUG - Điểm phân tích: ${controller.analysisResult.value?.score}');
+    
+    // Kiểm tra video ID có hợp lệ không
+    if (videoId.isEmpty) {
+      // Thử lấy ID từ selectedVideo của VideoController
+      final videoController = Get.find<VideoController>();
+      if (videoController.selectedVideo.value != null) {
+        videoId = videoController.selectedVideo.value!.id;
+        print('DEBUG - Đã lấy videoId từ selectedVideo: $videoId');
+      }
+    }
+    
+    // Kiểm tra lại video ID có hợp lệ không
+    if (videoId.isEmpty) {
+      // Nếu không có videoId, hiển thị thông báo
+      Get.snackbar(
+        'Lỗi',
+        'Không thể xác định video đang xem. Vui lòng thử lại.',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+        duration: const Duration(seconds: 3),
+      );
+    }
+    
+    // Kiểm tra video có tồn tại trong danh sách videos của VideoController
+    final videoController = Get.find<VideoController>();
+    if (!videoController.hasVideoWithId(videoId)) {
+      print('DEBUG - VIDEO ID KHÔNG TỒN TẠI TRONG DANH SÁCH: $videoId');
+    }
+    
     showDialog(
       context: context,
       barrierDismissible: false,
       builder: (context) => AnalysisResultDialog(
         analysis: controller.analysisResult.value!,
+        videoId: videoId,
       ),
     );
   }
