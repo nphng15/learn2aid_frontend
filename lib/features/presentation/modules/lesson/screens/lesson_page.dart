@@ -8,12 +8,44 @@ import '../widgets/lesson_header.dart';
 import '../widgets/lesson_content.dart';
 import '../widgets/lesson_interactive.dart';
 
-class LessonPage extends StatelessWidget {
+class LessonPage extends StatefulWidget {
   const LessonPage({super.key});
 
   @override
+  State<LessonPage> createState() => _LessonPageState();
+}
+
+class _LessonPageState extends State<LessonPage> with SingleTickerProviderStateMixin {
+  late final TabController _tabController;
+  late final LessonController _lessonController;
+  
+  @override
+  void initState() {
+    super.initState();
+    _lessonController = Get.find<LessonController>();
+    
+    // Khởi tạo TabController với 2 tab
+    _tabController = TabController(length: 2, vsync: this);
+    
+    // Lắng nghe sự kiện tab change
+    _tabController.addListener(() {
+      if (!_tabController.indexIsChanging) {
+        // Chỉ cập nhật khi tab thực sự thay đổi
+        final tabNames = ['content', 'session'];
+        final tabName = tabNames[_tabController.index];
+        _lessonController.onTabChanged(tabName);
+      }
+    });
+  }
+  
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final LessonController lessonController = Get.find<LessonController>();
     final VideoController videoController = Get.find<VideoController>();
     final VideoModel? video = Get.arguments?['video'] ?? videoController.selectedVideo.value;
 
@@ -33,13 +65,28 @@ class LessonPage extends StatelessWidget {
                 ),
               ],
             ),
+            
+            // Tab bar
+            TabBar(
+              controller: _tabController,
+              labelColor: const Color(0xff215273),
+              unselectedLabelColor: Colors.grey,
+              indicatorColor: const Color(0xff215273),
+              tabs: const [
+                Tab(text: 'Nội dung'),
+                Tab(text: 'Luyện tập'),
+              ],
+            ),
+            
             const SizedBox(height: 16),
+            
+            // Tab content
             Expanded(
-              child: PageView(
-                controller: PageController(viewportFraction: 0.85),
+              child: TabBarView(
+                controller: _tabController,
                 physics: const BouncingScrollPhysics(),
                 children: [
-                  // Trang 1: Thông tin và xem video
+                  // Tab 1: Thông tin và xem video
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Column(
@@ -60,7 +107,8 @@ class LessonPage extends StatelessWidget {
                       ],
                     ),
                   ),
-                  // Trang 2: Video tương tác
+                  
+                  // Tab 2: Video tương tác
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Column(

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../../../config/theme/app_color.dart';
 import '../../profile/screens/profile_screen.dart';
+import '../../profile/profile_controller.dart';
 import '../../auth/login/login_controller.dart';
 import '../video_controller.dart';
 
@@ -59,6 +60,15 @@ class DashboardHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final LoginController loginController = Get.find<LoginController>();
+    
+    // Đảm bảo ProfileController được khởi tạo
+    if (!Get.isRegistered<ProfileController>()) {
+      Get.put<ProfileController>(ProfileController());
+    }
+    
+    // Lấy ProfileController
+    final ProfileController profileController = Get.find<ProfileController>();
+    
     // Lấy tên người dùng từ tài khoản Google
     final String displayName = loginController.googleUserName.value.isNotEmpty
         ? _getFirstName(loginController.googleUserName.value)
@@ -134,6 +144,42 @@ class DashboardHeader extends StatelessWidget {
                 ),
               ),
             ],
+          ),
+        ],
+      ),
+    );
+  }
+  
+  // Hiển thị hộp thoại xác nhận xóa dữ liệu
+  void _showClearDataConfirmation(BuildContext context, ProfileController controller) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Xác nhận xóa dữ liệu'),
+        content: const Text(
+          'Bạn có chắc chắn muốn xóa tất cả dữ liệu đã lưu cục bộ? '
+          'Các tiến trình xem video, danh sách video đã hoàn thành và đang xem sẽ bị xóa. '
+          'Hành động này không thể hoàn tác.'
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Hủy'),
+          ),
+          TextButton(
+            onPressed: () async {
+              Navigator.of(context).pop();
+              
+              await controller.clearLocalData();
+              
+              // Reload dashboard
+              final VideoController videoController = Get.find<VideoController>();
+              videoController.loadVideos();
+            },
+            style: TextButton.styleFrom(
+              foregroundColor: Colors.red,
+            ),
+            child: const Text('Xóa'),
           ),
         ],
       ),

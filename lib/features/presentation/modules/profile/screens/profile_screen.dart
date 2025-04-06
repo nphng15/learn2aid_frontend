@@ -67,6 +67,30 @@ class ProfileScreen extends StatelessWidget {
               
               // Các thông tin khác có thể thêm ở đây
               
+              // Nút xóa dữ liệu local
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () => _showClearDataConfirmation(context, profileController),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.orange,
+                    padding: EdgeInsets.symmetric(vertical: 15 / 932 * screenHeight),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  child: Text(
+                    'Xóa dữ liệu lưu cục bộ',
+                    style: GoogleFonts.lexend(
+                      fontSize: 16 / 932 * screenHeight,
+                      color: AppColors.white,
+                    ),
+                  ),
+                ),
+              ),
+              
+              SizedBox(height: 16 / 932 * screenHeight),
+              
               // Nút đăng xuất
               SizedBox(
                 width: double.infinity,
@@ -91,6 +115,37 @@ class ProfileScreen extends StatelessWidget {
             ],
           ),
         ),
+      ),
+    );
+  }
+  
+  // Hiển thị hộp thoại xác nhận xóa dữ liệu
+  void _showClearDataConfirmation(BuildContext context, ProfileController controller) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Xác nhận xóa dữ liệu'),
+        content: const Text(
+          'Bạn có chắc chắn muốn xóa tất cả dữ liệu đã lưu cục bộ? '
+          'Các tiến trình xem video, danh sách video đã hoàn thành và đang xem sẽ bị xóa. '
+          'Hành động này không thể hoàn tác.'
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Hủy'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              controller.clearLocalData();
+            },
+            style: TextButton.styleFrom(
+              foregroundColor: Colors.red,
+            ),
+            child: const Text('Xóa'),
+          ),
+        ],
       ),
     );
   }

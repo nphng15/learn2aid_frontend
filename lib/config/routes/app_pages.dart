@@ -15,6 +15,7 @@ import '../../features/presentation/modules/lesson/bindings/lesson_binding.dart'
 import '../../features/presentation/modules/profile/screens/profile_screen.dart';
 import '../../features/presentation/modules/profile/profile_binding.dart';
 import '../../features/presentation/modules/dashboard/video_binding.dart';
+import '../../features/presentation/modules/app_state_binding.dart';
 import 'app_routes.dart';
 
 abstract class AppPages {
@@ -37,6 +38,7 @@ abstract class AppPages {
       name: AppRoutes.dashboard,
       page: () => const DashboardPage(),
       bindings: [
+        AppStateBinding(),
         DashboardBinding(), 
         VideoBinding()
       ]
@@ -49,7 +51,10 @@ abstract class AppPages {
     GetPage(
       name: AppRoutes.lesson,
       page: () => const LessonPage(),
-      binding: LessonBinding(),
+      bindings: [
+        AppStateBinding(),
+        LessonBinding(),
+      ],
     ),
     GetPage(
       name: AppRoutes.lessonInteractive,
@@ -59,7 +64,9 @@ abstract class AppPages {
     GetPage(
       name: AppRoutes.profile,
       page: () => const ProfileScreen(),
-      binding: ProfileBinding(),
+      bindings: [
+        ProfileBinding(),
+      ],
     ),
   ];
 }

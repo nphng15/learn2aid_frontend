@@ -15,6 +15,18 @@ class LessonController extends GetxController {
   void onInit() {
     super.onInit();
     _videoController = Get.find<VideoController>();
+    
+    // Đăng ký currentTab với tag để có thể truy cập từ các controller khác
+    Get.put<Rx<String>>(currentTab, tag: 'currentTab');
+  }
+  
+  // Hàm gọi khi tab thay đổi
+  void onTabChanged(String tab) {
+    // Chỉ cập nhật nếu thực sự có thay đổi
+    if (currentTab.value != tab) {
+      print('DEBUG - LessonController: Tab thay đổi từ ${currentTab.value} sang $tab');
+      currentTab.value = tab;
+    }
   }
   
   //cập nhật tiến trình xem video
