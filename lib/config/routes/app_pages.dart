@@ -18,6 +18,8 @@ import '../../features/presentation/modules/dashboard/video_binding.dart';
 import '../../features/presentation/modules/app_state_binding.dart';
 import '../../features/presentation/modules/event/screens/event_page.dart';
 import '../../features/presentation/modules/event/event_binding.dart';
+import '../../features/presentation/modules/feedback/screens/feedback_page.dart';
+import '../../features/presentation/modules/feedback/feedback_binding.dart';
 import 'app_routes.dart';
 
 abstract class AppPages {
@@ -76,6 +78,11 @@ abstract class AppPages {
       bindings: [
         EventBinding(),
       ],
+    ),
+    GetPage(
+      name: AppRoutes.feedback,
+      page: () => FeedbackPage(),
+      binding: FeedbackBinding(),
     ),
   ];
 }

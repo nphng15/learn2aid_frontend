@@ -8,4 +8,5 @@ abstract class AppRoutes {
   static const login = '/login';
   static const profile = '/profile';
   static const event = '/event';
+  static const feedback = '/feedback';
 }

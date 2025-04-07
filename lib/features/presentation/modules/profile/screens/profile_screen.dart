@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../../../../config/theme/app_color.dart';
+import '../../../../../../config/routes/app_routes.dart';
 import '../profile_controller.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -66,6 +67,30 @@ class ProfileScreen extends StatelessWidget {
               SizedBox(height: 40 / 932 * screenHeight),
               
               // Các thông tin khác có thể thêm ở đây
+              
+              // Nút gửi phản hồi
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () => Get.toNamed(AppRoutes.feedback),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.primary,
+                    padding: EdgeInsets.symmetric(vertical: 15 / 932 * screenHeight),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  child: Text(
+                    'Gửi phản hồi',
+                    style: GoogleFonts.lexend(
+                      fontSize: 16 / 932 * screenHeight,
+                      color: AppColors.white,
+                    ),
+                  ),
+                ),
+              ),
+              
+              SizedBox(height: 16 / 932 * screenHeight),
               
               // Nút xóa dữ liệu local
               SizedBox(
