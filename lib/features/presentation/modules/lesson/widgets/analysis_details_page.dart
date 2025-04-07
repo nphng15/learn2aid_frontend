@@ -275,8 +275,35 @@ class AnalysisDetailsPage extends StatelessWidget {
     );
   }
   
-  // Định dạng tên danh mục giống như trong web frontend
   String _formatCategoryName(String category) {
+    Map<String, String> categoryTranslations = {
+      'hand_position': 'Vị trí tay',
+      'compression_depth': 'Độ sâu ép tim',
+      'compression_rate': 'Tốc độ ép tim',
+      'body_posture': 'Tư thế cơ thể',
+      'arm_position': 'Vị trí cánh tay',
+      'elbow_angle': 'Góc khuỷu tay',
+      'hand_placement': 'Vị trí đặt tay',
+      'chest_recoil': 'Hồi phục lồng ngực',
+      'rhythm': 'Nhịp điệu',
+      'overall': 'Tổng thể',
+      'technique': 'Kỹ thuật',
+      'form': 'Hình thức',
+      'consistency': 'Tính nhất quán',
+      'effectiveness': 'Hiệu quả',
+      'speed': 'Tốc độ',
+      'posture': 'Tư thế',
+      'stability': 'Độ ổn định',
+      'breathing': 'Hơi thở',
+      'offline_mode': 'Chế độ ngoại tuyến'
+    };
+    
+    // Trả về bản dịch nếu có, nếu không thì định dạng chuỗi gốc
+    if (categoryTranslations.containsKey(category.toLowerCase())) {
+      return categoryTranslations[category.toLowerCase()]!;
+    }
+    
+    // Nếu không có bản dịch, định dạng theo cách thông thường
     return category
       .split('_')
       .map((word) => word.isEmpty ? '' : '${word[0].toUpperCase()}${word.substring(1)}')

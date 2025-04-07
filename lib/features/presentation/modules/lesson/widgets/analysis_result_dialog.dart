@@ -67,7 +67,7 @@ class AnalysisResultDialog extends StatelessWidget {
           children: [
             // Tiêu đề kết quả
             const Text(
-              'Analysis Results',
+              'Kết quả phân tích',
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
@@ -156,7 +156,7 @@ class AnalysisResultDialog extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(vertical: 12),
                     ),
                     child: const Text(
-                      'View details',
+                      'Xem chi tiết',
                       style: TextStyle(
                         color: Color(0xff215273),
                         fontWeight: FontWeight.w600,
@@ -214,7 +214,7 @@ class AnalysisResultDialog extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(vertical: 12),
                     ),
                     child: const Text(
-                      'Continue',
+                      'Tiếp tục',
                       style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.w600,
@@ -238,6 +238,6 @@ class AnalysisResultDialog extends StatelessWidget {
     } else if (analysis.analysis.isNotEmpty) {
       return analysis.analysis;
     }
-    return "Your movement has been analyzed!";
+    return "Chuyển động của bạn đã được phân tích!";
   }
 } 

@@ -40,15 +40,6 @@ class DashboardHeader extends StatelessWidget {
               },
               onSubmitted: (value) {
                 videoController.searchVideos(value);
-                // Hiển thị snackbar để thông báo đã tìm kiếm
-                Get.snackbar(
-                  'Tìm kiếm',
-                  'Đang tìm kiếm: $value',
-                  snackPosition: SnackPosition.BOTTOM,
-                  backgroundColor: const Color(0xff55c595),
-                  colorText: Colors.white,
-                  duration: const Duration(seconds: 1),
-                );
               },
             ),
           ),
@@ -269,15 +260,6 @@ class DashboardHeader extends StatelessWidget {
         
         // Đóng dialog
         Navigator.of(context).pop();
-        
-        // Hiển thị thông báo
-        Get.snackbar(
-          'Thông báo',
-          'Đã chọn lọc video: $title',
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: const Color(0xff55c595),
-          colorText: Colors.white,
-        );
       },
       child: Container(
         width: double.infinity,

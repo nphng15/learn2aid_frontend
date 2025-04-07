@@ -43,7 +43,7 @@ class VideoAnalysisModel extends VideoAnalysis {
     final detailedSummary = json['detailed_summary'] ?? {};
     
     // Comment (phân tích chung) - sử dụng nếu có, nếu không thì dùng text mặc định
-    String analysisText = 'Phân tích video hoàn tất';
+    String analysisText = 'Hiện hệ thống tạm ngưng do không hoạt động trong thời gian dài. Vui lòng chờ khoảng 5 phút rồi thử tải video lên lại. Cảm ơn bạn!';
     if (detailedSummary['comment'] != null) {
       analysisText = detailedSummary['comment'];
     }

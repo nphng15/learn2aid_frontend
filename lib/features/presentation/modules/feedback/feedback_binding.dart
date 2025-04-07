@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:learn2aid/features/data/datasources/feedback_remote_datasource.dart';
+import 'package:learn2aid/features/data/datasources/remote/feedback_remote_datasource.dart';
 import 'package:learn2aid/features/data/repositories/feedback_repository_impl.dart';
 import 'package:learn2aid/features/domain/usecases/submit_feedback_usecase.dart';
 import 'package:learn2aid/features/presentation/modules/feedback/feedback_controller.dart';
