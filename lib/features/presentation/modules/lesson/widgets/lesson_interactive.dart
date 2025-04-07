@@ -139,7 +139,7 @@ class LessonInteractive extends StatelessWidget {
             ),
             SizedBox(height: 8),
             Text(
-              'Chọn hoặc quay video để AI phân tích',
+              'Chọn hoặc quay video để AI đánh giá kết quả thực hành của bạn!',
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 14,
