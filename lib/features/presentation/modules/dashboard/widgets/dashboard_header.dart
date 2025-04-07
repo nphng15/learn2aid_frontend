@@ -100,7 +100,6 @@ class DashboardHeader extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 16),
           Text(
             "Hello, $displayName!",
             style: const TextStyle(

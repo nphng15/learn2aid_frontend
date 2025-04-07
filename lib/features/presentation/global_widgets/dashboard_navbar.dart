@@ -56,10 +56,10 @@ class DashboardNavBar extends StatelessWidget {
                 isActive: Get.currentRoute == AppRoutes.event,
               ),
               navButton(
-                icon: Icons.settings_outlined,
+                icon: Icons.person_outline,
                 color: const Color(0xff215273),
-                onTap: () {}, // Placeholder cho chức năng khác
-                isActive: false,
+                onTap: () => Get.toNamed(AppRoutes.profile),
+                isActive: Get.currentRoute == AppRoutes.profile,
               ),
             ],
           ),
