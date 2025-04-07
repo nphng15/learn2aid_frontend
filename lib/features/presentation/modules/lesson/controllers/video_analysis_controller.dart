@@ -44,9 +44,8 @@ class VideoAnalysisController extends GetxController {
   // Xử lý sự kiện khi tab thay đổi
   void _onTabChanged(String tabName) {
     print('DEBUG - Tab thay đổi sang: $tabName');
-    if (tabName == 'session') {
-      // Nếu chuyển đến tab session, xóa video và trạng thái
-      resetState();
+    if (tabName == 'content') {
+      resetAll();
     }
   }
   
@@ -132,6 +131,9 @@ class VideoAnalysisController extends GetxController {
       // Lưu kết quả phân tích
       // await _saveAnalysisResultUseCase.execute(result);
       
+      // Xóa video sau khi phân tích xong
+      await clearVideo();
+      
     } catch (e) {
       hasError.value = true;
       errorMessage.value = 'Lỗi khi phân tích video: $e';
@@ -140,33 +142,35 @@ class VideoAnalysisController extends GetxController {
     }
   }
   
-  // Reset state và xóa video
-  Future<void> resetState() async {
+  Future<void> clearVideo() async {
     try {
       // Xóa file video nếu có
       if (videoFile.value != null) {
         final path = videoFile.value!.path;
-        print('DEBUG - Xóa video: $path');
         
         if (videoFile.value!.existsSync()) {
           videoFile.value!.deleteSync();
-          print('DEBUG - Đã xóa file video');
         }
       }
       
       // Xóa trong storage
       await _saveVideoStateUseCase.clearTempVideo();
       
-      // Reset các giá trị
+      // Xóa tham chiếu đến video để không hiển thị preview
       videoFile.value = null;
+    } catch (e) {}
+  }
+  
+  // Reset toàn bộ trạng thái
+  Future<void> resetAll() async {
+    try {
+      await clearVideo();
+      
+      // Reset các giá trị khác
       hasError.value = false;
       errorMessage.value = '';
       analysisResult.value = null;
-      
-      print('DEBUG - Đã reset trạng thái và xóa video');
-    } catch (e) {
-      print('DEBUG - Lỗi khi reset trạng thái: $e');
-    }
+    } catch (e) {}
   }
   
   @override

@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import '../controllers/video_analysis_controller.dart';
 import './video_player_widget.dart';
 import './analysis_result_dialog.dart';
-import '../../dashboard/video_controller.dart';
+import '../../dashboard/controllers/video_controller.dart';
 
 
 class LessonInteractive extends StatelessWidget {

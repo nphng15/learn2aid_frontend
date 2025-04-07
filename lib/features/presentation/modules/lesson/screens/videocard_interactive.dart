@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../../../features/data/models/video_model.dart';
-import '../lesson_controller.dart';
+import '../controllers/lesson_controller.dart';
 
 class LessonInteractive extends StatefulWidget {
   const LessonInteractive({super.key});

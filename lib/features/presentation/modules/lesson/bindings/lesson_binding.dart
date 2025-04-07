@@ -4,7 +4,7 @@ import '../../../../data/repositories/video_analysis_repository_impl.dart';
 import '../../../../domain/repositories/video_analysis_repository.dart';
 import '../../../../domain/usecases/analyze_video_usecase.dart';
 import '../../../../domain/usecases/save_analysis_result_usecase.dart';
-import '../lesson_controller.dart';
+import '../controllers/lesson_controller.dart';
 
 class LessonBinding implements Bindings {
   @override

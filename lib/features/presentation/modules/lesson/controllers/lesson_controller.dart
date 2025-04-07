@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
-import '../../../../features/data/models/video_model.dart';
-import '../../../../features/data/services/video_service.dart';
-import '../dashboard/video_controller.dart';
+import '../../../../data/models/video_model.dart';
+import '../../../../data/services/video_service.dart';
+import '../../dashboard/controllers/video_controller.dart';
 import 'package:flutter/material.dart';
 
 class LessonController extends GetxController {

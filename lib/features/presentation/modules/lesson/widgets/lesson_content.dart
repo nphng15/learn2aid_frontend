@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:ui';
 import 'package:get/get.dart';
-import '../../../modules/dashboard/video_controller.dart';
+import '../../dashboard/controllers/video_controller.dart';
 
 class LessonContent extends StatelessWidget {
   final String imageUrl;

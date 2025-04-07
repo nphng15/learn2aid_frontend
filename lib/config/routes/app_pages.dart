@@ -6,7 +6,7 @@ import 'package:learn2aid/features/presentation/modules/auth/register/screens/re
 import 'package:learn2aid/features/presentation/modules/auth/loading/loading_binding.dart';
 import 'package:learn2aid/features/presentation/modules/auth/loading/screens/loading_screen.dart';
 import '../../features/presentation/modules/dashboard/screens/dashboard_page.dart';
-import '../../features/presentation/modules/dashboard/dashboard_binding.dart';
+import '../../features/presentation/modules/dashboard/bindings/dashboard_binding.dart';
 import '../../features/presentation/modules/quiz/screens/quiz_page.dart';
 import '../../features/presentation/modules/quiz/quiz_binding.dart';
 import '../../features/presentation/modules/lesson/screens/lesson_page.dart';
@@ -14,7 +14,7 @@ import '../../features/presentation/modules/lesson/screens/videocard_interactive
 import '../../features/presentation/modules/lesson/bindings/lesson_binding.dart';
 import '../../features/presentation/modules/profile/screens/profile_screen.dart';
 import '../../features/presentation/modules/profile/profile_binding.dart';
-import '../../features/presentation/modules/dashboard/video_binding.dart';
+import '../../features/presentation/modules/dashboard/bindings/video_binding.dart';
 import '../../features/presentation/modules/app_state_binding.dart';
 import '../../features/presentation/modules/event/screens/event_page.dart';
 import '../../features/presentation/modules/event/event_binding.dart';

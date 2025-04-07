@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../../features/data/models/video_model.dart';
-import '../video_controller.dart';
+import '../controllers/video_controller.dart';
 import 'dashboard_card.dart';
 
 class DashboardSection extends StatelessWidget {

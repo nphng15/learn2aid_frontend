@@ -4,7 +4,7 @@ import '../../../../../../config/theme/app_color.dart';
 import '../../profile/screens/profile_screen.dart';
 import '../../profile/profile_controller.dart';
 import '../../auth/login/login_controller.dart';
-import '../video_controller.dart';
+import '../controllers/video_controller.dart';
 
 class DashboardHeader extends StatelessWidget {
   const DashboardHeader({super.key});

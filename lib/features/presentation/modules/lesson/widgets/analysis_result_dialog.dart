@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../domain/entities/video_analysis.dart';
 import './analysis_details_page.dart';
-import '../../lesson/lesson_controller.dart';
-import '../../dashboard/video_controller.dart';
+import '../controllers/lesson_controller.dart';
+import '../../dashboard/controllers/video_controller.dart';
 
 class AnalysisResultDialog extends StatelessWidget {
   final VideoAnalysis analysis;

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '../../../data/models/video_model.dart';
-import '../../../data/services/video_service.dart';
-import '../../../domain/usecases/app_state/get_video_state_usecase.dart';
-import '../../../domain/usecases/app_state/save_video_state_usecase.dart';
+import '../../../../data/models/video_model.dart';
+import '../../../../data/services/video_service.dart';
+import '../../../../domain/usecases/app_state/get_video_state_usecase.dart';
+import '../../../../domain/usecases/app_state/save_video_state_usecase.dart';
 
 class VideoController extends GetxController {
   final VideoService _videoService = VideoService();
