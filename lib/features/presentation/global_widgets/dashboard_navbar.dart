@@ -50,10 +50,10 @@ class DashboardNavBar extends StatelessWidget {
                 isActive: Get.currentRoute == AppRoutes.quiz,
               ),
               navButton(
-                icon: Icons.chat_bubble_outline,
+                icon: Icons.event_outlined,
                 color: const Color(0xff215273),
-                onTap: () {},
-                // isActive: Get.currentRoute == AppRoutes.quiz,
+                onTap: () => Get.offNamed(AppRoutes.event),
+                isActive: Get.currentRoute == AppRoutes.event,
               ),
               navButton(
                 icon: Icons.settings_outlined,

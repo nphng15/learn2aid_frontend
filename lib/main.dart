@@ -58,7 +58,7 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: Colors.white,
       ),
       debugShowCheckedModeBanner: false,
-      initialRoute: AppRoutes.login, // Chạy vào trang Loading trước
+      initialRoute: AppRoutes.loading, // Chạy vào trang Loading trước
       getPages: AppPages.pages,
     );
   }

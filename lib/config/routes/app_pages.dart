@@ -16,6 +16,8 @@ import '../../features/presentation/modules/profile/screens/profile_screen.dart'
 import '../../features/presentation/modules/profile/profile_binding.dart';
 import '../../features/presentation/modules/dashboard/video_binding.dart';
 import '../../features/presentation/modules/app_state_binding.dart';
+import '../../features/presentation/modules/event/screens/event_page.dart';
+import '../../features/presentation/modules/event/event_binding.dart';
 import 'app_routes.dart';
 
 abstract class AppPages {
@@ -66,6 +68,13 @@ abstract class AppPages {
       page: () => const ProfileScreen(),
       bindings: [
         ProfileBinding(),
+      ],
+    ),
+    GetPage(
+      name: AppRoutes.event,
+      page: () => const EventPage(),
+      bindings: [
+        EventBinding(),
       ],
     ),
   ];
