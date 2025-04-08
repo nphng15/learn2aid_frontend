@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 import 'package:chewie/chewie.dart';
-import 'package:wakelock/wakelock.dart';
 
 class VideoPopupPlayer extends StatefulWidget {
   final String videoUrl;
@@ -25,7 +24,6 @@ class _VideoPopupPlayerState extends State<VideoPopupPlayer> {
   late VideoPlayerController _videoPlayerController;
   ChewieController? _chewieController;
   bool _isInitialized = false;
-  bool _isFullScreen = false;
 
   @override
   void initState() {
@@ -53,7 +51,7 @@ class _VideoPopupPlayerState extends State<VideoPopupPlayer> {
         materialProgressColors: ChewieProgressColors(
           playedColor: const Color(0xff215273),
           handleColor: const Color(0xff215273),
-          bufferedColor: const Color(0xff215273).withOpacity(0.5),
+          bufferedColor: const Color(0xff215273).withAlpha(128),
           backgroundColor: Colors.grey,
         ),
         showControls: true,
@@ -69,26 +67,19 @@ class _VideoPopupPlayerState extends State<VideoPopupPlayer> {
         _isInitialized = true;
       });
     } catch (e) {
-      print('Lỗi khởi tạo video player: $e');
+      // Sử dụng debugPrint thay vì print
+      debugPrint('Lỗi khởi tạo video player: $e');
     }
   }
   
   // Hàm xử lý sự kiện video
   void _videoListener() {
-    if (_videoPlayerController.value.isPlaying) {
-      // Video đang phát
-      Wakelock.enable();
-      
-      // Cập nhật tiến trình xem video
-      final position = _videoPlayerController.value.position;
-      final duration = _videoPlayerController.value.duration;
-      if (duration.inSeconds > 0) {
-        final progress = position.inSeconds / duration.inSeconds;
-        widget.onProgressUpdate(widget.videoId, progress);
-      }
-    } else {
-      // Video đã dừng
-      Wakelock.disable();
+    // Cập nhật tiến trình xem video
+    final position = _videoPlayerController.value.position;
+    final duration = _videoPlayerController.value.duration;
+    if (duration.inSeconds > 0) {
+      final progress = position.inSeconds / duration.inSeconds;
+      widget.onProgressUpdate(widget.videoId, progress);
     }
   }
 
@@ -97,7 +88,6 @@ class _VideoPopupPlayerState extends State<VideoPopupPlayer> {
     _videoPlayerController.removeListener(_videoListener);
     _videoPlayerController.dispose();
     _chewieController?.dispose();
-    Wakelock.disable();
     super.dispose();
   }
 
@@ -154,4 +144,4 @@ class _VideoPopupPlayerState extends State<VideoPopupPlayer> {
       ),
     );
   }
-} 
+}

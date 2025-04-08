@@ -68,9 +68,6 @@ dependencies:
   #chewie
   chewie: ^1.5.0
 
-  #wakelock
-  wakelock: ^0.4.0
-
 dev_dependencies:
   flutter_test:
     sdk: flutter
