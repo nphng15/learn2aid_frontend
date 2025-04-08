@@ -8,6 +8,8 @@ abstract class EventRemoteDataSource {
   Future<bool> joinEvent(String eventId, String userId);
 
   Future<bool> hasUserJoinedEvent(String eventId, String userId);
+
+  Future<bool> cancelEvent(String eventId, String userId);
 }
 
 class EventRemoteDataSourceImpl implements EventRemoteDataSource {
@@ -82,6 +84,40 @@ class EventRemoteDataSourceImpl implements EventRemoteDataSource {
       return joinedUsers.contains(userId);
     } catch (e) {
       print('Lỗi khi kiểm tra trạng thái tham gia: $e');
+      return false;
+    }
+  }
+
+  @override
+  Future<bool> cancelEvent(String eventId, String userId) async {
+    try {
+      // Lấy document hiện tại
+      final docRef = _firestore.collection('events').doc(eventId);
+      final doc = await docRef.get();
+      
+      if (!doc.exists) {
+        return false;
+      }
+      
+      // Lấy danh sách joinedUsers hiện tại
+      final data = doc.data() as Map<String, dynamic>;
+      final List<dynamic> currentJoinedUsers = data['joinedUsers'] ?? [];
+      
+      // Kiểm tra xem user đã tham gia chưa
+      if (!currentJoinedUsers.contains(userId)) {
+        return false;
+      }
+      
+      // Xóa user khỏi danh sách
+      final updatedJoinedUsers = currentJoinedUsers.where((id) => id != userId).toList();
+      
+      // Cập nhật Firestore
+      await docRef.update({
+        'joinedUsers': updatedJoinedUsers,
+      });
+      
+      return true;
+    } catch (e) {
       return false;
     }
   }

@@ -119,17 +119,17 @@ class EventItem extends StatelessWidget {
 
                     // Nút tham gia
                     Obx(() => ElevatedButton(
-                      onPressed: hasUserJoined || controller.isLoading.value
+                      onPressed: controller.isLoading.value
                           ? null
                           : () => controller.joinEvent(event),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.secondary,
+                        backgroundColor: hasUserJoined ? Colors.red : AppColors.secondary,
                         foregroundColor: Colors.white,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20),
                         ),
                       ),
-                      child: controller.isLoading.value && !hasUserJoined
+                      child: controller.isLoading.value
                           ? const SizedBox(
                               width: 20,
                               height: 20,
@@ -139,7 +139,7 @@ class EventItem extends StatelessWidget {
                               ),
                             )
                           : Text(
-                              hasUserJoined ? 'Đã đăng ký' : 'Đăng ký',
+                              hasUserJoined ? 'Hủy đăng ký' : 'Đăng ký',
                               style: GoogleFonts.lexend(),
                             ),
                     )),

@@ -7,4 +7,6 @@ abstract class EventRepository {
   Future<bool> joinEvent(String eventId, String userId);
 
   Future<bool> hasUserJoinedEvent(String eventId, String userId);
+
+  Future<bool> cancelEvent(String eventId, String userId);
 } 

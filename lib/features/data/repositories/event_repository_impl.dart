@@ -33,4 +33,13 @@ class EventRepositoryImpl implements EventRepository {
       return false;
     }
   }
+
+  @override
+  Future<bool> cancelEvent(String eventId, String userId) async {
+    try {
+      return await _remoteDataSource.cancelEvent(eventId, userId);
+    } catch (e) {
+      return false;
+    }
+  }
 } 

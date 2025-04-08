@@ -48,31 +48,47 @@ class EventController extends GetxController {
       return;
     }
 
-    if (hasUserJoinedEvent(event)) {
-      errorMessage.value = 'Bạn đã tham gia sự kiện này';
-      return;
-    }
-
     isLoading.value = true;
     try {
-      final success = await _repository.joinEvent(event.id, currentUserId);
-      
-      if (success) {
-        // Cập nhật danh sách events
-        final index = events.indexWhere((e) => e.id == event.id);
-        if (index != -1) {
-          final updatedEvent = event.copyWith(
-            joinedUsers: [...event.joinedUsers, currentUserId],
-          );
-          events[index] = updatedEvent;
-          events.refresh();
+      bool success;
+      if (hasUserJoinedEvent(event)) {
+        // Nếu đã đăng ký thì hủy đăng ký
+        success = await _repository.cancelEvent(event.id, currentUserId);
+        if (success) {
+          final index = events.indexWhere((e) => e.id == event.id);
+          if (index != -1) {
+            final updatedEvent = event.copyWith(
+              joinedUsers: event.joinedUsers.where((id) => id != currentUserId).toList(),
+            );
+            events[index] = updatedEvent;
+            events.refresh();
+          }
         }
       } else {
-        errorMessage.value = 'Không thể tham gia sự kiện';
+        // Nếu chưa đăng ký thì đăng ký
+        success = await _repository.joinEvent(event.id, currentUserId);
+        if (success) {
+          final index = events.indexWhere((e) => e.id == event.id);
+          if (index != -1) {
+            final updatedEvent = event.copyWith(
+              joinedUsers: [...event.joinedUsers, currentUserId],
+            );
+            events[index] = updatedEvent;
+            events.refresh();
+          }
+        }
+      }
+      
+      if (!success) {
+        errorMessage.value = hasUserJoinedEvent(event) 
+            ? 'Không thể hủy đăng ký sự kiện'
+            : 'Không thể đăng ký sự kiện';
       }
     } catch (e) {
-      errorMessage.value = 'Không thể tham gia sự kiện: $e';
-      print('Lỗi khi tham gia sự kiện: $e');
+      errorMessage.value = hasUserJoinedEvent(event)
+          ? 'Không thể hủy đăng ký sự kiện: $e'
+          : 'Không thể đăng ký sự kiện: $e';
+      print('Lỗi khi thao tác với sự kiện: $e');
     } finally {
       isLoading.value = false;
     }
