@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:ui';
 import 'package:get/get.dart';
 import '../../dashboard/controllers/video_controller.dart';
+import './video_popup_player.dart';
 
 class LessonContent extends StatelessWidget {
   final String imageUrl;
@@ -161,7 +162,22 @@ class LessonContent extends StatelessWidget {
                     child: InkWell(
                       onTap: () {
                         if (videoUrl.isNotEmpty && videoController != null) {
-                          videoController!.openVideo(videoUrl, videoId);
+                          // Hiển thị popup video player thay vì mở trình duyệt
+                          showDialog(
+                            context: context,
+                            barrierDismissible: false,
+                            builder: (context) => VideoPopupPlayer(
+                              videoUrl: videoUrl,
+                              title: title,
+                              videoId: videoId,
+                              onProgressUpdate: (id, progress) {
+                                videoController!.updateVideoProgress(id, progress);
+                              },
+                            ),
+                          );
+                          
+                          // Cập nhật video đang xem
+                          videoController!.addToInProgress(videoId);
                         }
                       },
                       child: Container(
