@@ -110,7 +110,7 @@ class EventItem extends StatelessWidget {
                   children: [
                     // Số người tham gia
                     Text(
-                      '${event.joinedUsers.length} người tham gia',
+                      '${event.joinedUsers.length} người đăng ký',
                       style: GoogleFonts.lexend(
                         color: AppColors.grey3,
                         fontSize: 14,
@@ -139,7 +139,7 @@ class EventItem extends StatelessWidget {
                               ),
                             )
                           : Text(
-                              hasUserJoined ? 'Đã tham gia' : 'Tham gia',
+                              hasUserJoined ? 'Đã đăng ký' : 'Đăng ký',
                               style: GoogleFonts.lexend(),
                             ),
                     )),

@@ -9,11 +9,11 @@ import '../../dashboard/controllers/video_controller.dart';
 class LessonInteractive extends StatelessWidget {
   // Menu cho loại phong trào
   final List<Map<String, String>> movementTypes = [
-    {'value': 'cpr', 'label': 'Kỹ thuật CPR'},
-    {'value': 'recovery_position', 'label': 'Tư thế hồi phục'},
-    {'value': 'bandaging', 'label': 'Kỹ thuật băng bó'},
-    {'value': 'heimlich', 'label': 'Thủ thuật Heimlich'},
-    {'value': 'splinting', 'label': 'Kỹ thuật nẹp cố định'},
+    {'value': 'cpr', 'label': '1. CPR'},
+    {'value': 'recovery_position', 'label': '2. Tư thế hồi sức'},
+    {'value': 'heimlich', 'label': '3. Dị vật đường thở'},
+    {'value': 'nose_bleeding', 'label': '4. Chảy máu mũi'},
+    {'value': 'fainting', 'label': '5. Choáng ngất'},
   ];
 
   LessonInteractive({super.key});
@@ -23,101 +23,106 @@ class LessonInteractive extends StatelessWidget {
     // Lấy controller đã được đăng ký từ binding
     final controller = Get.find<VideoAnalysisController>();
     
-    return Container(
-      width: MediaQuery.of(context).size.width * 0.88,
-      height: MediaQuery.of(context).size.height * 0.61,
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: const Color.fromARGB(255, 255, 255, 255),
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: const Color(0xff215273), width: 2),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Center(
-            child: Text(
-              'Thực hành cùng AI!',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
+    return SingleChildScrollView(
+      child: Align(
+        alignment: Alignment.center,
+        child: Container(
+          width: MediaQuery.of(context).size.width * 0.85,
+          height: MediaQuery.of(context).size.height * 0.55,
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: const Color.fromARGB(255, 255, 255, 255),
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(color: const Color(0xff215273), width: 2),
           ),
-          const SizedBox(height: 12),
-          // Nội dung chính
-          Expanded(
-            child: Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Center(
+                child: Text(
+                  'Thực hành cùng AI!',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
               ),
-              child: Column(
-                children: [
-                  // Video preview area với kích thước cố định
-                  SizedBox(
-                    height: 180, // Chiều cao cố định khớp với VideoPlayerWidget
-                    child: Obx(() => controller.videoFile.value != null
-                        ? VideoPlayerWidget(videoFile: controller.videoFile.value!)
-                        : _buildEmptyVideoArea(),
-                    ),
+              const SizedBox(height: 12),
+              // Nội dung chính
+              Expanded(
+                child: Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
                   ),
-                  
-                  const SizedBox(height: 12),
-                  
-                  // Movement type dropdown và error message
-                  SizedBox(
-                    height: 50, // Chiều cao cố định cho dropdown/error
-                    child: Obx(() => controller.hasError.value
-                        ? _buildErrorMessage(controller.errorMessage.value)
-                        : _buildMovementDropdown(controller),
-                    ),
-                  ),
-                  
-                  const SizedBox(height: 12),
-                  
-                  // Action buttons - Luôn chiếm một không gian cố định
-                  SizedBox(
-                    height: 80,
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: InkWell(
-                            onTap: controller.isLoading.value
-                                ? null
-                                : controller.pickVideoFromGallery,
-                            child: interactiveBox(
-                              icon: Icons.upload,
-                              text: 'Tải lên',
-                              isDisabled: controller.isLoading.value,
-                            ),
-                          ),
+                  child: Column(
+                    children: [
+                      // Video preview area với kích thước cố định
+                      SizedBox(
+                        height: 180, // Chiều cao cố định khớp với VideoPlayerWidget
+                        child: Obx(() => controller.videoFile.value != null
+                            ? VideoPlayerWidget(videoFile: controller.videoFile.value!)
+                            : _buildEmptyVideoArea(),
                         ),
-                        const SizedBox(width: 16),
-                        Expanded(
-                          child: InkWell(
-                            onTap: controller.isLoading.value
-                                ? null
-                                : controller.recordNewVideo,
-                            child: interactiveBox(
-                              icon: Icons.camera_alt,
-                              text: 'Quay video',
-                              isDisabled: controller.isLoading.value,
-                            ),
-                          ),
+                      ),
+                      
+                      const SizedBox(height: 12),
+                      
+                      // Movement type dropdown và error message
+                      SizedBox(
+                        height: 50, // Chiều cao cố đ
+                        child: Obx(() => controller.hasError.value
+                            ? _buildErrorMessage(controller.errorMessage.value)
+                            : _buildMovementDropdown(controller),
                         ),
-                      ],
-                    ),
+                      ),
+                      
+                      const SizedBox(height: 12),
+                      
+                      // Action buttons 
+                      SizedBox(
+                        height: 80,
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: InkWell(
+                                onTap: controller.isLoading.value
+                                    ? null
+                                    : controller.pickVideoFromGallery,
+                                child: interactiveBox(
+                                  icon: Icons.upload,
+                                  text: 'Tải lên',
+                                  isDisabled: controller.isLoading.value,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 16),
+                            Expanded(
+                              child: InkWell(
+                                onTap: controller.isLoading.value
+                                    ? null
+                                    : controller.recordNewVideo,
+                                child: interactiveBox(
+                                  icon: Icons.camera_alt,
+                                  text: 'Quay video',
+                                  isDisabled: controller.isLoading.value,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      
+                      const SizedBox(height: 8),
+                      
+                      // Nút phân tích
+                      Obx(() => _buildAnalyzeButton(context, controller)),
+                    ],
                   ),
-                  
-                  const SizedBox(height: 8),
-                  
-                  // Nút phân tích
-                  Obx(() => _buildAnalyzeButton(context, controller)),
-                ],
+                ),
               ),
-            ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
@@ -200,6 +205,38 @@ class LessonInteractive extends StatelessWidget {
     );
   }
   
+  Widget interactiveBox({
+    required IconData icon,
+    required String text,
+    bool isDisabled = false,
+  }) {
+    return Container(
+      height: double.infinity,
+      decoration: BoxDecoration(
+        color: isDisabled ? Colors.grey.shade300 : Colors.grey.shade200,
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            icon,
+            size: 32,
+            color: isDisabled ? Colors.grey : Colors.black87,
+          ),
+          const SizedBox(height: 4),
+          Text(
+            text,
+            style: TextStyle(
+              fontSize: 14,
+              color: isDisabled ? Colors.grey : Colors.black87,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+  
   Widget _buildAnalyzeButton(BuildContext context, VideoAnalysisController controller) {
     final bool isDisabled = controller.isLoading.value || controller.videoFile.value == null;
     
@@ -252,38 +289,6 @@ class LessonInteractive extends StatelessWidget {
                   ),
                 ),
         ),
-      ),
-    );
-  }
-
-  Widget interactiveBox({
-    required IconData icon,
-    required String text,
-    bool isDisabled = false,
-  }) {
-    return Container(
-      height: double.infinity,
-      decoration: BoxDecoration(
-        color: isDisabled ? Colors.grey.shade300 : Colors.grey.shade200,
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            icon,
-            size: 32,
-            color: isDisabled ? Colors.grey : Colors.black87,
-          ),
-          const SizedBox(height: 4),
-          Text(
-            text,
-            style: TextStyle(
-              fontSize: 14,
-              color: isDisabled ? Colors.grey : Colors.black87,
-            ),
-          ),
-        ],
       ),
     );
   }

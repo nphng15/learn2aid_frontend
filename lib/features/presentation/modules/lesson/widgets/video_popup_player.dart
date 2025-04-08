@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 import 'dart:async';
+import 'package:flutter/services.dart';
 
 class VideoPopupPlayer extends StatefulWidget {
   final String videoUrl;
@@ -25,6 +26,7 @@ class _VideoPopupPlayerState extends State<VideoPopupPlayer> {
   bool _isInitialized = false;
   bool _isPlaying = false;
   bool _showControls = true;
+  bool _isFullScreen = false;
   Duration _position = Duration.zero;
   Duration _duration = Duration.zero;
   Timer? _hideTimer;
@@ -123,8 +125,37 @@ class _VideoPopupPlayerState extends State<VideoPopupPlayer> {
     return '$minutes:$seconds';
   }
 
+  // Chuyển đổi chế độ toàn màn hình
+  void _toggleFullScreen() {
+    setState(() {
+      _isFullScreen = !_isFullScreen;
+    });
+    
+    if (_isFullScreen) {
+      // Xoay màn hình sang ngang
+      SystemChrome.setPreferredOrientations([
+        DeviceOrientation.landscapeLeft,
+        DeviceOrientation.landscapeRight,
+      ]);
+      // Ẩn thanh trạng thái và thanh điều hướng
+      SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+    } else {
+      // Trở về chế độ dọc
+      SystemChrome.setPreferredOrientations([
+        DeviceOrientation.portraitUp,
+      ]);
+      // Hiện lại thanh trạng thái và thanh điều hướng
+      SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+    }
+  }
+
   @override
   void dispose() {
+    // Đảm bảo trở về chế độ dọc khi thoát
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+    ]);
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
     _hideTimer?.cancel();
     _videoPlayerController.removeListener(_videoListener);
     _videoPlayerController.dispose();
@@ -137,40 +168,62 @@ class _VideoPopupPlayerState extends State<VideoPopupPlayer> {
       backgroundColor: Colors.transparent,
       insetPadding: EdgeInsets.zero,
       child: Container(
-        width: MediaQuery.of(context).size.width * 0.9,
-        height: MediaQuery.of(context).size.height * 0.7,
+        width: _isFullScreen ? MediaQuery.of(context).size.width : MediaQuery.of(context).size.width * 0.9,
+        height: _isFullScreen ? MediaQuery.of(context).size.height : MediaQuery.of(context).size.height * 0.7,
         decoration: BoxDecoration(
           color: Colors.black,
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: _isFullScreen ? BorderRadius.zero : BorderRadius.circular(12),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Header với tiêu đề và nút đóng
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    child: Text(
-                      widget.title,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
+            if (!_isFullScreen) // Chỉ hiện header khi không ở chế độ toàn màn hình
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        widget.title,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
                     ),
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.close, color: Colors.white),
-                    onPressed: () => Navigator.of(context).pop(),
-                  ),
-                ],
+                    Row(
+                      children: [
+                        // Nút toàn màn hình
+                        Container(
+                          margin: const EdgeInsets.only(right: 8),
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: Colors.black.withOpacity(0.5),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: IconButton(
+                            icon: Icon(
+                              _isFullScreen ? Icons.fullscreen_exit : Icons.fullscreen,
+                              color: Colors.white,
+                              size: 32,
+                            ),
+                            onPressed: _toggleFullScreen,
+                          ),
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.close, color: Colors.white),
+                          onPressed: () => Navigator.of(context).pop(),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
-            ),
             // Video player
             Expanded(
               child: _isInitialized
@@ -181,7 +234,9 @@ class _VideoPopupPlayerState extends State<VideoPopupPlayer> {
                         children: [
                           // Video
                           AspectRatio(
-                            aspectRatio: _videoPlayerController.value.aspectRatio,
+                            aspectRatio: _isFullScreen 
+                                ? MediaQuery.of(context).size.aspectRatio 
+                                : _videoPlayerController.value.aspectRatio,
                             child: VideoPlayer(_videoPlayerController),
                           ),
                           
@@ -252,6 +307,28 @@ class _VideoPopupPlayerState extends State<VideoPopupPlayer> {
                               ),
                             ),
                           ),
+                          
+                          // Nút toàn màn hình khi ở chế độ toàn màn hình
+                          if (_isFullScreen && _showControls)
+                            Positioned(
+                              top: 16,
+                              right: 16,
+                              child: Container(
+                                padding: const EdgeInsets.all(8),
+                                decoration: BoxDecoration(
+                                  color: Colors.black.withOpacity(0.5),
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: IconButton(
+                                  icon: const Icon(
+                                    Icons.fullscreen_exit,
+                                    color: Colors.white,
+                                    size: 32,
+                                  ),
+                                  onPressed: _toggleFullScreen,
+                                ),
+                              ),
+                            ),
                         ],
                       ),
                     )
