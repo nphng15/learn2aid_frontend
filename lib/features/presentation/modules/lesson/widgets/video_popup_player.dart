@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
-import 'package:chewie/chewie.dart';
+import 'dart:async';
 
 class VideoPopupPlayer extends StatefulWidget {
   final String videoUrl;
@@ -22,8 +22,12 @@ class VideoPopupPlayer extends StatefulWidget {
 
 class _VideoPopupPlayerState extends State<VideoPopupPlayer> {
   late VideoPlayerController _videoPlayerController;
-  ChewieController? _chewieController;
   bool _isInitialized = false;
+  bool _isPlaying = false;
+  bool _showControls = true;
+  Duration _position = Duration.zero;
+  Duration _duration = Duration.zero;
+  Timer? _hideTimer;
 
   @override
   void initState() {
@@ -37,37 +41,18 @@ class _VideoPopupPlayerState extends State<VideoPopupPlayer> {
     try {
       await _videoPlayerController.initialize();
       
-      _chewieController = ChewieController(
-        videoPlayerController: _videoPlayerController,
-        autoPlay: true,
-        looping: false,
-        aspectRatio: 16 / 9,
-        placeholder: Container(
-          color: Colors.black,
-          child: const Center(
-            child: CircularProgressIndicator(),
-          ),
-        ),
-        materialProgressColors: ChewieProgressColors(
-          playedColor: const Color(0xff215273),
-          handleColor: const Color(0xff215273),
-          bufferedColor: const Color(0xff215273).withAlpha(128),
-          backgroundColor: Colors.grey,
-        ),
-        showControls: true,
-        allowFullScreen: true,
-        allowMuting: true,
-        showOptions: false,
-      );
-      
       // Thêm listener cho video player để xử lý sự kiện phát/dừng và cập nhật tiến trình
       _videoPlayerController.addListener(_videoListener);
       
       setState(() {
         _isInitialized = true;
+        _duration = _videoPlayerController.value.duration;
       });
+      
+      // Tự động phát video
+      _videoPlayerController.play();
+      _isPlaying = true;
     } catch (e) {
-      // Sử dụng debugPrint thay vì print
       debugPrint('Lỗi khởi tạo video player: $e');
     }
   }
@@ -77,17 +62,72 @@ class _VideoPopupPlayerState extends State<VideoPopupPlayer> {
     // Cập nhật tiến trình xem video
     final position = _videoPlayerController.value.position;
     final duration = _videoPlayerController.value.duration;
+    
+    setState(() {
+      _position = position;
+      _duration = duration;
+    });
+    
     if (duration.inSeconds > 0) {
       final progress = position.inSeconds / duration.inSeconds;
       widget.onProgressUpdate(widget.videoId, progress);
     }
   }
+  
+  // Hiển thị/ẩn điều khiển
+  void _toggleControls() {
+    setState(() {
+      _showControls = !_showControls;
+    });
+    
+    // Tự động ẩn điều khiển sau 3 giây
+    _hideTimer?.cancel();
+    if (_showControls) {
+      _hideTimer = Timer(const Duration(seconds: 3), () {
+        if (mounted) {
+          setState(() {
+            _showControls = false;
+          });
+        }
+      });
+    }
+  }
+  
+  // Chuyển đổi phát/dừng
+  void _togglePlayPause() {
+    setState(() {
+      _isPlaying = !_isPlaying;
+      if (_isPlaying) {
+        _videoPlayerController.play();
+      } else {
+        _videoPlayerController.pause();
+      }
+    });
+  }
+  
+  // Chuyển đến vị trí cụ thể
+  void _seekTo(Duration position) {
+    _videoPlayerController.seekTo(position);
+  }
+  
+  // Định dạng thời gian
+  String _formatDuration(Duration duration) {
+    String twoDigits(int n) => n.toString().padLeft(2, '0');
+    final hours = twoDigits(duration.inHours);
+    final minutes = twoDigits(duration.inMinutes.remainder(60));
+    final seconds = twoDigits(duration.inSeconds.remainder(60));
+    
+    if (duration.inHours > 0) {
+      return '$hours:$minutes:$seconds';
+    }
+    return '$minutes:$seconds';
+  }
 
   @override
   void dispose() {
+    _hideTimer?.cancel();
     _videoPlayerController.removeListener(_videoListener);
     _videoPlayerController.dispose();
-    _chewieController?.dispose();
     super.dispose();
   }
 
@@ -133,8 +173,88 @@ class _VideoPopupPlayerState extends State<VideoPopupPlayer> {
             ),
             // Video player
             Expanded(
-              child: _isInitialized && _chewieController != null
-                  ? Chewie(controller: _chewieController!)
+              child: _isInitialized
+                  ? GestureDetector(
+                      onTap: _toggleControls,
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          // Video
+                          AspectRatio(
+                            aspectRatio: _videoPlayerController.value.aspectRatio,
+                            child: VideoPlayer(_videoPlayerController),
+                          ),
+                          
+                          // Điều khiển
+                          if (_showControls)
+                            Container(
+                              color: Colors.black.withOpacity(0.5),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  // Nút phát/dừng
+                                  IconButton(
+                                    icon: Icon(
+                                      _isPlaying ? Icons.pause : Icons.play_arrow,
+                                      color: Colors.white,
+                                      size: 50,
+                                    ),
+                                    onPressed: _togglePlayPause,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          
+                          // Thanh tiến trình
+                          Positioned(
+                            bottom: 0,
+                            left: 0,
+                            right: 0,
+                            child: Container(
+                              color: Colors.black.withOpacity(0.5),
+                              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  // Thanh trượt tiến trình
+                                  SliderTheme(
+                                    data: SliderTheme.of(context).copyWith(
+                                      activeTrackColor: const Color(0xff215273),
+                                      inactiveTrackColor: Colors.grey,
+                                      thumbColor: const Color(0xff215273),
+                                      overlayColor: const Color(0xff215273).withOpacity(0.3),
+                                    ),
+                                    child: Slider(
+                                      value: _position.inMilliseconds.toDouble(),
+                                      min: 0,
+                                      max: _duration.inMilliseconds.toDouble(),
+                                      onChanged: (value) {
+                                        _seekTo(Duration(milliseconds: value.toInt()));
+                                      },
+                                    ),
+                                  ),
+                                  
+                                  // Thời gian hiện tại / tổng thời gian
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        _formatDuration(_position),
+                                        style: const TextStyle(color: Colors.white),
+                                      ),
+                                      Text(
+                                        _formatDuration(_duration),
+                                        style: const TextStyle(color: Colors.white),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
                   : const Center(
                       child: CircularProgressIndicator(),
                     ),
