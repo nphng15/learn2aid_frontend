@@ -245,7 +245,6 @@ class QuizController extends GetxController {
       // Cập nhật UI sau khi có thông tin quiz
       update();
     } catch (e) {
-      print('Lỗi khi lấy thông tin quiz: $e');
       throw 'Không thể tải thông tin bài kiểm tra';
     }
   }
@@ -415,6 +414,7 @@ class QuizController extends GetxController {
       // Tính điểm
       score.value = 0;
       for (int i = 0; i < questions.length; i++) {
+        
         if (i < userAnswers.length && userAnswers[i] == questions[i].correctOption) {
           score.value++;
         }
@@ -525,4 +525,4 @@ class QuizController extends GetxController {
     
     super.onClose();
   }
-} 
+}

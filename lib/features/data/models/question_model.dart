@@ -22,8 +22,8 @@ class QuestionModel extends QuestionEntity {
       id: doc.id,
       text: data['text'] ?? 'No question text',
       options: List<String>.from(data['options'] ?? []),
-      correctOption: data['correctOption'] ?? 0,
-      imageUrl: data['imageUrl'],
+      correctOption: int.tryParse(data['answer']?.toString() ?? '0') ?? 0,
+      imageUrl: data['imageUrl'] ?? data['imageURL'],
     );
   }
 
@@ -31,8 +31,8 @@ class QuestionModel extends QuestionEntity {
     return {
       'text': text,
       'options': options,
-      'correctOption': correctOption,
-      'imageUrl': imageUrl,
+      'answer': correctOption,
+      'imageURL': imageUrl,
     };
   }
 } 
