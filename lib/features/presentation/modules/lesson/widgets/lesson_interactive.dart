@@ -28,8 +28,7 @@ class LessonInteractive extends StatelessWidget {
         alignment: Alignment.center,
         child: Container(
           width: MediaQuery.of(context).size.width * 0.85,
-          height: MediaQuery.of(context).size.height * 0.55,
-          padding: const EdgeInsets.all(12),
+          padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
             color: const Color.fromARGB(255, 255, 255, 255),
             borderRadius: BorderRadius.circular(20),
@@ -45,79 +44,81 @@ class LessonInteractive extends StatelessWidget {
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: 8),
               // Nội dung chính
-              Expanded(
-                child: Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Column(
-                    children: [
-                      // Video preview area với kích thước cố định
-                      SizedBox(
-                        height: 180, // Chiều cao cố định khớp với VideoPlayerWidget
-                        child: Obx(() => controller.videoFile.value != null
-                            ? VideoPlayerWidget(videoFile: controller.videoFile.value!)
-                            : _buildEmptyVideoArea(),
-                        ),
+              Container(
+                constraints: BoxConstraints(
+                  maxHeight: MediaQuery.of(context).size.height * 0.5,
+                ),
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // Video preview area với kích thước cố định
+                    SizedBox(
+                      height: 160,
+                      child: Obx(() => controller.videoFile.value != null
+                          ? VideoPlayerWidget(videoFile: controller.videoFile.value!)
+                          : _buildEmptyVideoArea(),
                       ),
-                      
-                      const SizedBox(height: 12),
-                      
-                      // Movement type dropdown và error message
-                      SizedBox(
-                        height: 50, // Chiều cao cố đ
-                        child: Obx(() => controller.hasError.value
-                            ? _buildErrorMessage(controller.errorMessage.value)
-                            : _buildMovementDropdown(controller),
-                        ),
+                    ),
+                    
+                    const SizedBox(height: 8),
+                    
+                    // Movement type dropdown và error message
+                    SizedBox(
+                      height: 50,
+                      child: Obx(() => controller.hasError.value
+                          ? _buildErrorMessage(controller.errorMessage.value)
+                          : _buildMovementDropdown(controller),
                       ),
-                      
-                      const SizedBox(height: 12),
-                      
-                      // Action buttons 
-                      SizedBox(
-                        height: 80,
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: InkWell(
-                                onTap: controller.isLoading.value
-                                    ? null
-                                    : controller.pickVideoFromGallery,
-                                child: interactiveBox(
-                                  icon: Icons.upload,
-                                  text: 'Tải lên',
-                                  isDisabled: controller.isLoading.value,
-                                ),
+                    ),
+                    
+                    const SizedBox(height: 8),
+                    
+                    // Action buttons 
+                    SizedBox(
+                      height: 70,
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: InkWell(
+                              onTap: controller.isLoading.value
+                                  ? null
+                                  : controller.pickVideoFromGallery,
+                              child: interactiveBox(
+                                icon: Icons.upload,
+                                text: 'Tải lên',
+                                isDisabled: controller.isLoading.value,
                               ),
                             ),
-                            const SizedBox(width: 16),
-                            Expanded(
-                              child: InkWell(
-                                onTap: controller.isLoading.value
-                                    ? null
-                                    : controller.recordNewVideo,
-                                child: interactiveBox(
-                                  icon: Icons.camera_alt,
-                                  text: 'Quay video',
-                                  isDisabled: controller.isLoading.value,
-                                ),
+                          ),
+                          const SizedBox(width: 16),
+                          Expanded(
+                            child: InkWell(
+                              onTap: controller.isLoading.value
+                                  ? null
+                                  : controller.recordNewVideo,
+                              child: interactiveBox(
+                                icon: Icons.camera_alt,
+                                text: 'Quay video',
+                                isDisabled: controller.isLoading.value,
                               ),
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
-                      
-                      const SizedBox(height: 8),
-                      
-                      // Nút phân tích
-                      Obx(() => _buildAnalyzeButton(context, controller)),
-                    ],
-                  ),
+                    ),
+                    
+                    const SizedBox(height: 8),
+                    
+                    // Nút phân tích
+                    Obx(() => _buildAnalyzeButton(context, controller)),
+                  ],
                 ),
               ),
             ],
@@ -241,54 +242,100 @@ class LessonInteractive extends StatelessWidget {
     final bool isDisabled = controller.isLoading.value || controller.videoFile.value == null;
     
     return Center(
-      child: GestureDetector(
-        onTap: isDisabled
-            ? null
-            : () async {
-                await controller.analyzeVideo();
-                
-                if (controller.analysisResult.value != null && !controller.hasError.value) {
-                  _showAnalysisDialog(context, controller);
-                }
-              },
-        child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 32),
-          decoration: BoxDecoration(
-            color: isDisabled ? Colors.grey : const Color(0xff55c595),
-            borderRadius: BorderRadius.circular(60),
-          ),
-          child: controller.isLoading.value
-              ? const Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    SizedBox(
-                      width: 16,
-                      height: 16,
-                      child: CircularProgressIndicator(
-                        color: Colors.white,
-                        strokeWidth: 2,
-                      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          GestureDetector(
+            onTap: () {
+              Get.dialog(
+                AlertDialog(
+                  title: const Text('Hướng dẫn thực hành'),
+                  content: const Text(
+                    'Các bước thực hành:\n\n'
+                    '1. Chọn loại động tác cần thực hành\n'
+                    '2. Tải lên video hoặc quay video mới\n'
+                    '3. Nhấn nút Phân tích để AI đánh giá kỹ năng của bạn'
+                  ),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Get.back(),
+                      child: const Text('Đã hiểu'),
                     ),
-                    SizedBox(width: 8),
-                    Text(
-                      'Đang phân tích...',
+                  ],
+                ),
+                barrierDismissible: true,
+              );
+            },
+            child: Container(
+              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 24),
+              decoration: BoxDecoration(
+                color: const Color(0xff215273),
+                borderRadius: BorderRadius.circular(60),
+              ),
+              child: const Text(
+                'Hướng dẫn',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ),
+          
+          const SizedBox(width: 12),
+          
+          // Nút Phân tích
+          GestureDetector(
+            onTap: isDisabled
+                ? null
+                : () async {
+                    await controller.analyzeVideo();
+                    
+                    if (controller.analysisResult.value != null && !controller.hasError.value) {
+                      _showAnalysisDialog(context, controller);
+                    }
+                  },
+            child: Container(
+              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 32),
+              decoration: BoxDecoration(
+                color: isDisabled ? Colors.grey : const Color(0xff55c595),
+                borderRadius: BorderRadius.circular(60),
+              ),
+              child: controller.isLoading.value
+                  ? const Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        SizedBox(
+                          width: 16,
+                          height: 16,
+                          child: CircularProgressIndicator(
+                            color: Colors.white,
+                            strokeWidth: 2,
+                          ),
+                        ),
+                        SizedBox(width: 8),
+                        Text(
+                          'Đang phân tích...',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
+                    )
+                  : const Text(
+                      'Phân tích',
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
                       ),
                     ),
-                  ],
-                )
-              : const Text(
-                  'Phân tích',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
-        ),
+            ),
+          ),
+        ],
       ),
     );
   }
