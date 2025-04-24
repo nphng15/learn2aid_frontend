@@ -16,7 +16,6 @@ To run any Android application built with Flutter you need to configure the envi
 - Firebase (Authentication, Firestore)
 - Hive (Local Storage)
 - Camera & Video Player
-- Device Preview
 - Google Fonts
 
 ## Setup
