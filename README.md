@@ -30,7 +30,7 @@ To run any Android application built with Flutter you need to configure the envi
 
 The Flutter codebase follows Clean Architecture principles, a design philosophy that emphasizes separation of concerns and maintainability.
 
-<img src="assets/images/architecture.png" alt="architecture" width="500">
+<img src="lib/assets/images/architecture.png" alt="architecture" width="500">
 
 # Project Structure
 
