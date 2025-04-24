@@ -38,10 +38,6 @@ The Flutter codebase follows Clean Architecture principles, a design philosophy 
 - lib/
   - assets/: Contains application resources
     - icons/: Contains application icons
-    - learn2aid.png
-    - apple-logo.png
-    - facebook-logo.png
-    - google-logo.png
 
   - config/: Application configuration
     - routes/
@@ -92,6 +88,7 @@ The Flutter codebase follows Clean Architecture principles, a design philosophy 
 
 <p align="center">
   <img src="lib/assets/images/login.png" alt="Login Screen" width="150">
+  <img src="lib/assets/images/Google-login.png" alt="Google login Screen" width="150">
 </p>
 
 ### Dashboard
@@ -102,11 +99,11 @@ The Flutter codebase follows Clean Architecture principles, a design philosophy 
   <img src="lib/assets/images/video_lesson.png" alt="Video Lesson" width="150">
   <img src="lib/assets/images/video.png" alt="video" width="150">
   <img src="lib/assets/images/practice_with_ai.png" alt="Practice with AI" width="150">
+  <img src="lib/assets/images/grade.png" alt="Grade" width="150">
   <img src="lib/assets/images/analysis-result.png" alt="Analysis Result" width="150">
-</p>
-<p align="center">
   <img src="lib/assets/images/analysis-result-2.png" alt="Analysis Result 2" width="150">
 </p>
+
 
 ### Quiz
 
@@ -115,13 +112,13 @@ The Flutter codebase follows Clean Architecture principles, a design philosophy 
   <img src="lib/assets/images/quizz-attemp.png" alt="Quiz Attempt" width="150">
   <img src="lib/assets/images/quiz-result-1.png" alt="Quiz Result 1" width="150">
   <img src="lib/assets/images/quiz-result-2.png" alt="Quiz Result 2" width="150">
-  <img src="lib/assets/images/grade.png" alt="Grade" width="150">
 </p>
 
 ### Events
 
 <p align="center">
   <img src="lib/assets/images/events-screen.png" alt="Events Screen" width="150">
+  <img src="lib/assets/images/events-screen-2.png" alt="Events Screen" width="150">
 </p>
 
 ### Profile
